@@ -17,42 +17,28 @@ export async function signUp(formData: FormData) {
   const { data: authData, error: authError } = await supabase.auth.signUp({
     email,
     password,
+    options: {
+      data: {
+        role,
+        full_name: fullName,
+        phone,
+        ville,
+        category_ids: role === 'prestataire' ? categoryIds : undefined,
+      },
+    },
   });
 
   if (authError || !authData.user) {
     redirect(`/inscription?role=${role}&error=${encodeURIComponent(authError?.message || 'Erreur inconnue')}`);
   }
 
-  const userId = authData.user!.id;
+  // La ligne profiles (+ prestataire_profiles/catégories) est créée automatiquement
+  // par le trigger on_auth_user_created, à partir des métadonnées ci-dessus.
 
-  const { error: profileError } = await supabase.from('profiles').insert({
-    id: userId,
-    role,
-    full_name: fullName,
-    phone,
-    ville,
-  });
-
-  if (profileError) {
-    redirect(`/inscription?role=${role}&error=${encodeURIComponent(profileError.message)}`);
+  if (!authData.session) {
+    // Confirmation par email requise : pas de session tant que l'email n'est pas confirmé
+    redirect('/inscription/verifiez-votre-email');
   }
 
-  if (role === 'prestataire') {
-    const { error: prestataireError } = await supabase
-      .from('prestataire_profiles')
-      .insert({ user_id: userId });
-
-    if (prestataireError) {
-      redirect(`/inscription?role=${role}&error=${encodeURIComponent(prestataireError.message)}`);
-    }
-
-    if (categoryIds.length > 0) {
-      const rows = categoryIds.map((category_id) => ({ prestataire_id: userId, category_id }));
-      await supabase.from('prestataire_categories').insert(rows);
-    }
-
-    redirect('/dashboard/prestataire');
-  }
-
-  redirect('/dashboard/client');
+  redirect(role === 'prestataire' ? '/dashboard/prestataire' : '/dashboard/client');
 }
