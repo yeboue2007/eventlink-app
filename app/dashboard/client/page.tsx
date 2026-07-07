@@ -9,6 +9,8 @@ export default async function ClientDashboard() {
     data: { user },
   } = await supabase.auth.getUser();
 
+  console.log('[DASHBOARD_CLIENT]', 'user:', user?.id ?? 'none');
+
   if (!user) redirect('/login');
 
   const { data: profile } = await supabase

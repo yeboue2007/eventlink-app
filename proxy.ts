@@ -26,7 +26,9 @@ export async function proxy(request: NextRequest) {
   );
 
   // Rafraîchit la session si besoin (obligatoire pour que le RLS voie auth.uid() côté serveur)
-  await supabase.auth.getUser();
+  console.log('[PROXY] cookies reçus:', request.cookies.getAll().map((c) => c.name).join(', ') || '(aucun)');
+  const { data, error } = await supabase.auth.getUser();
+  console.log('[PROXY]', request.nextUrl.pathname, '| user:', data?.user?.id ?? 'none', '| error:', error?.message ?? 'none');
 
   return response;
 }
