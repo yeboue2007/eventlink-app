@@ -1,13 +1,141 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@import "tw-animate-css";
 
-body {
-  background-color: #F4F6FA;
-  color: #2C1E47;
+@custom-variant dark (&:is(.dark *));
+
+/* ==========================================================================
+   EventLink — Design Tokens
+   Source de vérité : charte graphique validée (voir /ARCHITECTURE.md)
+   ========================================================================== */
+:root {
+  /* Couleurs de marque brutes — ne jamais utiliser directement dans les
+     composants, toujours passer par les tokens sémantiques ci-dessous. */
+  --el-navy: #2c1e47;
+  --el-violet: #6a3ec9;
+  --el-rose: #e94e8b;
+  --el-orange: #ff8a00;
+  --el-gold: #ffc107;
+  --el-bg-light: #f4f6fa;
+
+  /* Dégradé de marque : réservé aux accents et CTA (jamais aux fonds larges
+     ni au texte courant — règle de la charte graphique). */
+  --el-gradient: linear-gradient(
+    90deg,
+    var(--el-violet) 0%,
+    var(--el-rose) 55%,
+    var(--el-orange) 100%
+  );
+
+  --radius: 0.875rem;
+
+  /* Tokens sémantiques shadcn/ui */
+  --background: var(--el-bg-light);
+  --foreground: var(--el-navy);
+
+  --card: #ffffff;
+  --card-foreground: var(--el-navy);
+
+  --popover: #ffffff;
+  --popover-foreground: var(--el-navy);
+
+  --primary: var(--el-violet);
+  --primary-foreground: #ffffff;
+
+  --secondary: #ece7f9;
+  --secondary-foreground: var(--el-navy);
+
+  --muted: #e9ecf5;
+  --muted-foreground: #6b6580;
+
+  --accent: var(--el-orange);
+  --accent-foreground: #ffffff;
+
+  --destructive: #d94848;
+  --destructive-foreground: #ffffff;
+
+  --success: #1f9d55;
+  --success-foreground: #ffffff;
+
+  --warning: var(--el-gold);
+  --warning-foreground: var(--el-navy);
+
+  --border: #e1e4ee;
+  --input: #e1e4ee;
+  --ring: var(--el-violet);
 }
 
-:focus-visible {
-  outline: 2px solid #6A3EC9;
-  outline-offset: 2px;
+.dark {
+  --background: #17102b;
+  --foreground: #f4f6fa;
+  --card: #201436;
+  --card-foreground: #f4f6fa;
+  --popover: #201436;
+  --popover-foreground: #f4f6fa;
+  --secondary: #2c2145;
+  --secondary-foreground: #f4f6fa;
+  --muted: #2c2145;
+  --muted-foreground: #b2acc5;
+  --border: #362a52;
+  --input: #362a52;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  /* Couleurs de marque exposées telles quelles (badges, illustrations) */
+  --color-el-navy: var(--el-navy);
+  --color-el-violet: var(--el-violet);
+  --color-el-rose: var(--el-rose);
+  --color-el-orange: var(--el-orange);
+  --color-el-gold: var(--el-gold);
+
+  --font-sans: var(--font-poppins);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground font-sans;
+  }
+}
+
+@layer utilities {
+  .bg-el-gradient {
+    background-image: var(--el-gradient);
+  }
+  .text-el-gradient {
+    background-image: var(--el-gradient);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+  }
 }

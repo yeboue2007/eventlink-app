@@ -1,23 +1,31 @@
-import type { Metadata } from 'next';
-import './globals.css';
+import type { Metadata } from "next";
+import { Poppins } from "next/font/google";
+import "./globals.css";
+
+const poppins = Poppins({
+  variable: "--font-poppins",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
+});
 
 export const metadata: Metadata = {
-  title: 'EventLink — Connexion. Confiance. Événements réussis.',
+  title: {
+    default: "EventLink — Connexion. Confiance. Événements réussis.",
+    template: "%s | EventLink",
+  },
   description:
-    "Trouvez les meilleurs prestataires pour vos événements à Abidjan, ou recevez des demandes ciblées pour votre activité événementielle.",
+    "EventLink met en relation les organisateurs d'événements et les prestataires événementiels à Abidjan : publiez une demande, recevez plusieurs offres, choisissez en toute confiance.",
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
   return (
-    <html lang="fr">
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
-          rel="stylesheet"
-        />
-      </head>
-      <body className="font-sans">{children}</body>
+    <html lang="fr" className={`${poppins.variable} h-full antialiased`}>
+      <body className="min-h-full flex flex-col">{children}</body>
     </html>
   );
 }

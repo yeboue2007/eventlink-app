@@ -1,24 +1,28 @@
 # EventLink
 
-Plateforme SaaS de mise en relation entre organisateurs d'événements et prestataires événementiels — Abidjan.
+Plateforme SaaS de mise en relation entre organisateurs d'événements et
+prestataires événementiels — lancement à Abidjan, Côte d'Ivoire.
 
 ## Stack
-- Next.js 16 (App Router) + Tailwind CSS
-- Supabase (Postgres, Auth, RLS) — projet `eventlink` (réf. atfkmynxserakuyqvvzk)
-- Déploiement Vercel
 
-## Configuration locale
-Copier `.env.local.example` en `.env.local` et renseigner les clés du projet Supabase.
+- **Frontend** : Next.js (App Router) · TypeScript strict · Tailwind CSS v4 · shadcn/ui · React Hook Form · Zod
+- **Backend** : Supabase (PostgreSQL, Auth, Realtime, RLS)
+- **Stockage média** : Cloudflare R2 (jamais dans Supabase)
+- **Déploiement** : GitHub → Vercel (déploiement automatique)
+
+## Démarrage
 
 ```bash
 npm install
+cp .env.example .env.local   # renseigner les clés Supabase
 npm run dev
 ```
 
-## Structure
-- `app/page.tsx` — landing page (charte graphique EventLink)
-- `app/inscription`, `app/login` — auth (rôle client/prestataire, sélection multi-catégories)
-- `app/dashboard/client` — publication de demandes multi-lots
-- `app/dashboard/prestataire` — crédits, catégories, réponse aux demandes (offres simples ou groupées)
-- `lib/supabase` — clients Supabase (browser/serveur)
-- `proxy.ts` — rafraîchissement de session (convention Next.js 16, ex-middleware)
+## Documentation
+
+- [`ARCHITECTURE.md`](./ARCHITECTURE.md) — arborescence, conventions de nommage, système de design. À lire avant toute contribution.
+
+## État du projet
+
+Phase 1 (architecture frontend) en cours. Voir `ARCHITECTURE.md` pour le détail
+des phases et l'ordre de développement des fonctionnalités.
