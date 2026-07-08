@@ -9,11 +9,13 @@ et documentée ici.
 ```
 eventlink/
 ├── app/                        # Next.js App Router — routage uniquement
-│   ├── (public)/                # Landing, recherche publique, profils publics
-│   ├── (auth)/                  # Connexion / inscription / mot de passe oublié
-│   ├── (client)/                # Espace organisateur d'événement
-│   ├── (prestataire)/           # Espace entreprise prestataire
-│   ├── (admin)/                 # Back-office
+│   ├── (public)/                # Landing, recherche publique, profils publics (groupe, sans segment d'URL)
+│   ├── (auth)/                  # Connexion / inscription / mot de passe oublié (groupe, sans segment d'URL)
+│   ├── auth/confirm/            # Callback des liens e-mail Supabase (token_hash)
+│   ├── client/                  # Espace organisateur d'événement — protégé par layout.tsx (rôle DB)
+│   ├── prestataire/              # Espace entreprise prestataire — protégé par layout.tsx (rôle DB)
+│   ├── admin/                    # Back-office — protégé par layout.tsx (rôle DB)
+│   ├── tableau-de-bord/          # Redirecteur : envoie vers /client, /prestataire ou /admin selon le rôle
 │   ├── api/                     # Route Handlers (webhooks, endpoints ponctuels)
 │   ├── layout.tsx
 │   └── globals.css              # Tokens de marque (voir §3)
@@ -23,8 +25,16 @@ eventlink/
 │       ├── components/          # Composants propres à ce domaine
 │       ├── hooks/                # Hooks propres à ce domaine
 │       ├── actions/              # Server Actions (mutations)
+│       ├── queries/              # Lecture de données (Server Components), ajouté au besoin
 │       ├── schemas/              # Schémas de validation Zod
 │       └── types/                # Types propres à ce domaine
+
+**Note sur `(public)`/`(auth)` vs `client`/`prestataire`/`admin`** : les groupes
+entre parenthèses n'ajoutent pas de segment d'URL (utile quand plusieurs pages
+partagent un layout sans vouloir de préfixe visible). `client`, `prestataire`
+et `admin` sont volontairement de **vrais dossiers** (pas des groupes) car on
+veut un préfixe d'URL distinct par espace (`/client/...`, `/admin/...`) — chacun
+protégé par son propre `layout.tsx` qui vérifie le rôle en base.
 │
 ├── components/
 │   ├── ui/                      # Design system générique, sans logique métier

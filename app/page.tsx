@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -27,6 +29,14 @@ export default function DesignSystemCheckPage() {
           Socle d&rsquo;architecture Phase 1 — arborescence, conventions et
           système de design. Aucune fonctionnalité métier sur cette page.
         </p>
+        <div className="flex gap-3 pt-2">
+          <Button asChild variant="primary" size="sm">
+            <Link href="/inscription">Créer un compte</Link>
+          </Button>
+          <Button asChild variant="outline" size="sm">
+            <Link href="/connexion">Se connecter</Link>
+          </Button>
+        </div>
       </header>
 
       <Card>

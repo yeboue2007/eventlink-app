@@ -28,7 +28,21 @@ export async function updateSession(request: NextRequest) {
   );
 
   // IMPORTANT : ne pas insérer de logique entre createServerClient et getUser().
-  await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  const { pathname } = request.nextUrl;
+  const espacesProteges = ["/client", "/prestataire", "/admin", "/tableau-de-bord"];
+  const estEspaceProtege = espacesProteges.some(
+    (prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`)
+  );
+
+  if (estEspaceProtege && !user) {
+    const url = request.nextUrl.clone();
+    url.pathname = "/connexion";
+    return NextResponse.redirect(url);
+  }
 
   return supabaseResponse;
 }
