@@ -92,6 +92,21 @@ Les composants `components/ui/*` ne contiennent **aucune logique métier** —
 un `Button` ne sait pas ce qu'est une offre ; un composant de
 `features/offres/components` l'utilise et lui donne un sens métier.
 
+**Inventaire (Phase 4)** : Button, Card, Badge, Input, Label, Table, Dialog
+(sert aussi de Modal), Select, Avatar, DropdownMenu, Tabs, Separator,
+Checkbox, Tooltip, Loader/FullPageLoader, Pagination (basée sur des liens,
+compatible Server Components), notifications toast (`sonner`, distinct de la
+table `notifications` en base qui est le centre persistant).
+
+**Composants de layout** (`components/layout/`) : `AppNavbar` (barre des
+espaces authentifiés), `Sidebar` (générique, reçoit sa liste de liens en
+prop — ne connaît aucune route métier en dur), `Footer` (site public).
+
+**Composants partagés génériques** (`components/shared/`) : `FilterBar`
+(recherche + filtres Select réutilisable par n'importe quel écran de liste —
+recherche prestataires, back-office, etc. — sans connaître les catégories
+concrètes qu'on lui passe).
+
 ## 4. Modules métier (`features/`)
 
 Chaque domaine est autonome et ne doit pas importer directement les
