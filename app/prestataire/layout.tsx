@@ -1,15 +1,16 @@
-import { Coins, FileText, LayoutDashboard, Tags } from "lucide-react";
+import { Coins, CreditCard, FileText, LayoutDashboard, Tags } from "lucide-react";
 import { redirect } from "next/navigation";
 
 import { AppNavbar } from "@/components/layout/app-navbar";
 import { Sidebar, type SidebarNavItem } from "@/components/layout/sidebar";
 import { getCurrentProfile } from "@/features/auth/queries/get-current-profile";
 
-// Complété au fil des phases suivantes (abonnements, calendrier...).
+// Complété au fil des phases suivantes (calendrier, avis...).
 const NAV_ITEMS: SidebarNavItem[] = [
   { label: "Tableau de bord", href: "/prestataire", icon: LayoutDashboard },
   { label: "Demandes correspondantes", href: "/prestataire/demandes", icon: FileText },
   { label: "Mes crédits", href: "/prestataire/credits", icon: Coins },
+  { label: "Mon abonnement", href: "/prestataire/abonnement", icon: CreditCard },
   { label: "Mes catégories", href: "/prestataire/parametres/categories", icon: Tags },
 ];
 

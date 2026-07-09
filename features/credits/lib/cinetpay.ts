@@ -28,6 +28,7 @@ export async function initCinetpayPayment(params: {
   description: string;
   customerName: string;
   customerPhone: string;
+  returnPath: string;
 }): Promise<CinetpayInitResult> {
   const { apikey, siteId } = getCredentials();
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "";
@@ -45,7 +46,7 @@ export async function initCinetpayPayment(params: {
       customer_name: params.customerName,
       customer_phone_number: params.customerPhone,
       notify_url: `${siteUrl}/api/cinetpay/notify`,
-      return_url: `${siteUrl}/prestataire/credits/retour?transaction_id=${params.transactionId}`,
+      return_url: `${siteUrl}${params.returnPath}?transaction_id=${params.transactionId}`,
       channels: "ALL",
     }),
   });

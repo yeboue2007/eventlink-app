@@ -1,5 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server";
 
+import { verifyAndFinalizeSubscriptionTransaction } from "@/features/abonnements/lib/finalize-subscription";
 import { verifyAndFinalizeCinetpayTransaction } from "@/features/credits/lib/finalize-transaction";
 
 /**
@@ -35,7 +36,13 @@ async function handleNotification(request: NextRequest) {
     return NextResponse.json({ error: "transaction_id manquant" }, { status: 400 });
   }
 
-  await verifyAndFinalizeCinetpayTransaction(transactionId);
+  // Le préfixe distingue un achat de crédits d'un achat d'abonnement — deux
+  // tables de commandes et deux RPC de confirmation distinctes.
+  if (transactionId.startsWith("el-sub-")) {
+    await verifyAndFinalizeSubscriptionTransaction(transactionId);
+  } else {
+    await verifyAndFinalizeCinetpayTransaction(transactionId);
+  }
 
   // CinetPay attend une réponse 200 pour ne pas retenter indéfiniment.
   return NextResponse.json({ received: true });

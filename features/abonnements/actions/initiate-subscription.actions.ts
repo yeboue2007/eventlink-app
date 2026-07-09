@@ -7,26 +7,23 @@ import { getCurrentProfile } from "@/features/auth/queries/get-current-profile";
 import { initCinetpayPayment } from "@/features/credits/lib/cinetpay";
 import { createClient } from "@/lib/supabase/server";
 
-export type InitiatePurchaseState = { error?: string } | undefined;
+export type InitiateSubscriptionState = { error?: string } | undefined;
 
-export async function initiatePurchaseAction(
-  packId: string,
+export async function initiateSubscriptionAction(
+  planId: string,
   amountFcfa: number,
-  packLabel: string
-): Promise<InitiatePurchaseState> {
+  planLabel: string
+): Promise<InitiateSubscriptionState> {
   const current = await getCurrentProfile();
   if (!current) {
     return { error: "Vous devez être connecté." };
   }
 
   const supabase = await createClient();
-  const transactionId = `el-cr-${randomUUID().replace(/-/g, "").slice(0, 18)}`;
+  const transactionId = `el-sub-${randomUUID().replace(/-/g, "").slice(0, 17)}`;
 
-  // Crée la commande en base d'abord (RLS : vérifie que l'appelant appartient
-  // bien à une entreprise et que le pack est actif) — avant tout appel à
-  // CinetPay, pour ne jamais générer un paiement sans commande à réconcilier.
-  const { error: orderError } = await supabase.rpc("rpc_creer_commande_credits", {
-    p_credit_pack_id: packId,
+  const { error: orderError } = await supabase.rpc("rpc_creer_commande_abonnement", {
+    p_plan_id: planId,
     p_cinetpay_transaction_id: transactionId,
   });
 
@@ -37,10 +34,10 @@ export async function initiatePurchaseAction(
   const { success, paymentUrl } = await initCinetpayPayment({
     transactionId,
     amountFcfa,
-    description: `Achat pack de crédits EventLink — ${packLabel}`,
+    description: `Abonnement EventLink — ${planLabel} (1 mois)`,
     customerName: current.profile.full_name || "Prestataire",
     customerPhone: current.profile.phone,
-    returnPath: "/prestataire/credits/retour",
+    returnPath: "/prestataire/abonnement/retour",
   });
 
   if (!success || !paymentUrl) {

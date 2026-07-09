@@ -1395,6 +1395,39 @@ export type Database = {
           },
         ]
       }
+      subscription_purchase_orders: {
+        Row: {
+          id: string
+          entreprise_id: string
+          plan_id: string
+          montant_fcfa: number
+          cinetpay_transaction_id: string
+          status: Database["public"]["Enums"]["purchase_order_status"]
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          entreprise_id: string
+          plan_id: string
+          montant_fcfa: number
+          cinetpay_transaction_id: string
+          status?: Database["public"]["Enums"]["purchase_order_status"]
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          entreprise_id?: string
+          plan_id?: string
+          montant_fcfa?: number
+          cinetpay_transaction_id?: string
+          status?: Database["public"]["Enums"]["purchase_order_status"]
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       subscription_plans: {
         Row: {
           active: boolean
@@ -1558,6 +1591,18 @@ export type Database = {
           p_ville: string
         }
         Returns: string
+      }
+      rpc_creer_commande_abonnement: {
+        Args: { p_plan_id: string; p_cinetpay_transaction_id: string }
+        Returns: string
+      }
+      rpc_confirmer_achat_abonnement: {
+        Args: { p_cinetpay_transaction_id: string }
+        Returns: undefined
+      }
+      rpc_echouer_achat_abonnement: {
+        Args: { p_cinetpay_transaction_id: string }
+        Returns: undefined
       }
       rpc_creer_commande_credits: {
         Args: { p_credit_pack_id: string; p_cinetpay_transaction_id: string }
