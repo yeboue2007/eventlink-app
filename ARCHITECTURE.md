@@ -123,7 +123,24 @@ plusieurs autres domaines (demandes, entreprises, recherche, administration)
 ont besoin de lire l'arbre des catégories — un seul point de lecture plutôt
 qu'une requête dupliquée dans chacun.
 
-## 5. Règle transversale
+## 5bis. Sécurité des fonctions RPC (leçon retenue)
+
+Supabase accorde `EXECUTE` à `anon` et `authenticated` **par défaut** sur
+toute nouvelle fonction (via `ALTER DEFAULT PRIVILEGES` au niveau du projet),
+indépendamment du rôle `PUBLIC`. Conséquence pratique : `REVOKE ... FROM
+PUBLIC` ne suffit **jamais** à rendre une fonction privée — il faut toujours
+révoquer explicitement `anon` et `authenticated` (`REVOKE EXECUTE ... FROM
+anon, authenticated`) pour toute fonction qui ne doit être appelée que depuis
+le serveur (ex. confirmation de paiement après vérification externe).
+
+## 5ter. Client à privilèges élevés (`lib/supabase/service.ts`)
+
+Utilise la clé de service, contourne entièrement la RLS. Réservé aux route
+handlers qui traitent des requêtes non-utilisateur sans session Supabase
+(webhooks de paiement CinetPay). Ne jamais l'importer depuis un composant
+client ni un fichier sans `import "server-only"`.
+
+## 6. Règle transversale
 
 Avant toute fonctionnalité métier significative, se poser les questions du
 brief : est-ce générique ? Peut-on faire évoluer sans refonte ? Introduit-on de

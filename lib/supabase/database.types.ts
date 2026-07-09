@@ -180,6 +180,45 @@ export type Database = {
           },
         ]
       }
+      credit_purchase_orders: {
+        Row: {
+          id: string
+          entreprise_id: string
+          wallet_id: string
+          credit_pack_id: string
+          montant_fcfa: number
+          credits_amount: number
+          cinetpay_transaction_id: string
+          status: Database["public"]["Enums"]["purchase_order_status"]
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          entreprise_id: string
+          wallet_id: string
+          credit_pack_id: string
+          montant_fcfa: number
+          credits_amount: number
+          cinetpay_transaction_id: string
+          status?: Database["public"]["Enums"]["purchase_order_status"]
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          entreprise_id?: string
+          wallet_id?: string
+          credit_pack_id?: string
+          montant_fcfa?: number
+          credits_amount?: number
+          cinetpay_transaction_id?: string
+          status?: Database["public"]["Enums"]["purchase_order_status"]
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       credit_costs: {
         Row: {
           active: boolean
@@ -1520,6 +1559,18 @@ export type Database = {
         }
         Returns: string
       }
+      rpc_creer_commande_credits: {
+        Args: { p_credit_pack_id: string; p_cinetpay_transaction_id: string }
+        Returns: string
+      }
+      rpc_confirmer_achat_credits: {
+        Args: { p_cinetpay_transaction_id: string }
+        Returns: undefined
+      }
+      rpc_echouer_achat_credits: {
+        Args: { p_cinetpay_transaction_id: string }
+        Returns: undefined
+      }
       rpc_repondre_offre: {
         Args: {
           p_decision: Database["public"]["Enums"]["offre_status"]
@@ -1575,6 +1626,7 @@ export type Database = {
         | "systeme"
       notification_channel: "realtime" | "email" | "push"
       offre_status: "envoyee" | "vue" | "acceptee" | "refusee" | "retiree"
+      purchase_order_status: "en_attente" | "reussi" | "echoue" | "annule"
       projet_status: "actif" | "termine" | "annule"
       subscription_status: "active" | "expiree" | "annulee" | "suspendue"
       user_role: "client" | "prestataire" | "admin"
