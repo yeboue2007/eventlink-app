@@ -1,13 +1,14 @@
-import { LayoutDashboard } from "lucide-react";
+import { FileText, LayoutDashboard } from "lucide-react";
 import { redirect } from "next/navigation";
 
 import { AppNavbar } from "@/components/layout/app-navbar";
 import { Sidebar, type SidebarNavItem } from "@/components/layout/sidebar";
 import { getCurrentProfile } from "@/features/auth/queries/get-current-profile";
 
-// Complété au fil des phases suivantes (projets, demandes, messages, favoris...).
+// Complété au fil des phases suivantes (favoris, messages...).
 const NAV_ITEMS: SidebarNavItem[] = [
   { label: "Tableau de bord", href: "/client", icon: LayoutDashboard },
+  { label: "Mes demandes", href: "/client/demandes", icon: FileText },
 ];
 
 export default async function ClientLayout({

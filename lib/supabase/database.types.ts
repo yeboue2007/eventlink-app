@@ -7,6 +7,8 @@ export type Json =
   | Json[]
 
 export type Database = {
+  // Allows to automatically instantiate createClient with right options
+  // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
     PostgrestVersion: "14.5"
   }
@@ -43,7 +45,22 @@ export type Database = {
           nom?: string
           ville?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "agences_entreprise_id_fkey"
+            columns: ["entreprise_id"]
+            isOneToOne: false
+            referencedRelation: "entreprises"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "agences_entreprise_id_fkey"
+            columns: ["entreprise_id"]
+            isOneToOne: false
+            referencedRelation: "v_reliability_score"
+            referencedColumns: ["entreprise_id"]
+          },
+        ]
       }
       audit_log: {
         Row: {
@@ -73,7 +90,15 @@ export type Database = {
           id?: string
           metadata?: Json | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "audit_log_actor_profile_id_fkey"
+            columns: ["actor_profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       availability_slots: {
         Row: {
@@ -100,7 +125,22 @@ export type Database = {
           note?: string | null
           status?: Database["public"]["Enums"]["availability_status"]
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "availability_slots_entreprise_id_fkey"
+            columns: ["entreprise_id"]
+            isOneToOne: false
+            referencedRelation: "entreprises"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "availability_slots_entreprise_id_fkey"
+            columns: ["entreprise_id"]
+            isOneToOne: false
+            referencedRelation: "v_reliability_score"
+            referencedColumns: ["entreprise_id"]
+          },
+        ]
       }
       categories: {
         Row: {
@@ -130,7 +170,15 @@ export type Database = {
           parent_id?: number | null
           slug?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "categories_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       credit_costs: {
         Row: {
@@ -163,7 +211,15 @@ export type Database = {
           valid_from?: string
           valid_to?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "credit_costs_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       credit_packs: {
         Row: {
@@ -229,7 +285,29 @@ export type Database = {
           type?: Database["public"]["Enums"]["credit_txn_type"]
           wallet_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "credit_transactions_related_offre_id_fkey"
+            columns: ["related_offre_id"]
+            isOneToOne: false
+            referencedRelation: "offres"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "credit_transactions_related_pack_id_fkey"
+            columns: ["related_pack_id"]
+            isOneToOne: false
+            referencedRelation: "credit_packs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "credit_transactions_wallet_id_fkey"
+            columns: ["wallet_id"]
+            isOneToOne: false
+            referencedRelation: "wallets"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       demande_lots: {
         Row: {
@@ -259,7 +337,22 @@ export type Database = {
           project_size?: string
           status?: Database["public"]["Enums"]["demande_status"]
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "demande_lots_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "demande_lots_demande_id_fkey"
+            columns: ["demande_id"]
+            isOneToOne: false
+            referencedRelation: "demandes"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       demandes: {
         Row: {
@@ -313,7 +406,22 @@ export type Database = {
           updated_at?: string
           ville?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "demandes_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "demandes_projet_id_fkey"
+            columns: ["projet_id"]
+            isOneToOne: false
+            referencedRelation: "projets"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       entreprise_membres: {
         Row: {
@@ -334,7 +442,29 @@ export type Database = {
           profile_id?: string
           role?: Database["public"]["Enums"]["entreprise_membre_role"]
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "entreprise_membres_entreprise_id_fkey"
+            columns: ["entreprise_id"]
+            isOneToOne: false
+            referencedRelation: "entreprises"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "entreprise_membres_entreprise_id_fkey"
+            columns: ["entreprise_id"]
+            isOneToOne: false
+            referencedRelation: "v_reliability_score"
+            referencedColumns: ["entreprise_id"]
+          },
+          {
+            foreignKeyName: "entreprise_membres_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       entreprise_stats: {
         Row: {
@@ -358,7 +488,22 @@ export type Database = {
           nb_offres_acceptees?: number
           nb_offres_envoyees?: number
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "entreprise_stats_entreprise_id_fkey"
+            columns: ["entreprise_id"]
+            isOneToOne: false
+            referencedRelation: "entreprises"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "entreprise_stats_entreprise_id_fkey"
+            columns: ["entreprise_id"]
+            isOneToOne: false
+            referencedRelation: "v_reliability_score"
+            referencedColumns: ["entreprise_id"]
+          },
+        ]
       }
       entreprises: {
         Row: {
@@ -433,7 +578,29 @@ export type Database = {
           created_at?: string
           entreprise_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "favoris_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "favoris_entreprise_id_fkey"
+            columns: ["entreprise_id"]
+            isOneToOne: false
+            referencedRelation: "entreprises"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "favoris_entreprise_id_fkey"
+            columns: ["entreprise_id"]
+            isOneToOne: false
+            referencedRelation: "v_reliability_score"
+            referencedColumns: ["entreprise_id"]
+          },
+        ]
       }
       media_files: {
         Row: {
@@ -460,7 +627,22 @@ export type Database = {
           type?: Database["public"]["Enums"]["media_type"]
           url?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "media_files_entreprise_id_fkey"
+            columns: ["entreprise_id"]
+            isOneToOne: false
+            referencedRelation: "entreprises"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "media_files_entreprise_id_fkey"
+            columns: ["entreprise_id"]
+            isOneToOne: false
+            referencedRelation: "v_reliability_score"
+            referencedColumns: ["entreprise_id"]
+          },
+        ]
       }
       messages: {
         Row: {
@@ -502,7 +684,29 @@ export type Database = {
           sender_id?: string
           type?: Database["public"]["Enums"]["message_type"]
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "messages_demande_id_fkey"
+            columns: ["demande_id"]
+            isOneToOne: false
+            referencedRelation: "demandes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "messages_offre_id_fkey"
+            columns: ["offre_id"]
+            isOneToOne: false
+            referencedRelation: "offres"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "messages_sender_id_fkey"
+            columns: ["sender_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       notifications: {
         Row: {
@@ -538,7 +742,15 @@ export type Database = {
           title?: string
           type?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "notifications_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       offre_lots: {
         Row: {
@@ -559,7 +771,22 @@ export type Database = {
           offre_id?: string
           prix_lot?: number
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "offre_lots_demande_lot_id_fkey"
+            columns: ["demande_lot_id"]
+            isOneToOne: false
+            referencedRelation: "demande_lots"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "offre_lots_offre_id_fkey"
+            columns: ["offre_id"]
+            isOneToOne: false
+            referencedRelation: "offres"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       offre_participants: {
         Row: {
@@ -580,7 +807,29 @@ export type Database = {
           offre_id?: string
           role?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "offre_participants_entreprise_id_fkey"
+            columns: ["entreprise_id"]
+            isOneToOne: false
+            referencedRelation: "entreprises"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "offre_participants_entreprise_id_fkey"
+            columns: ["entreprise_id"]
+            isOneToOne: false
+            referencedRelation: "v_reliability_score"
+            referencedColumns: ["entreprise_id"]
+          },
+          {
+            foreignKeyName: "offre_participants_offre_id_fkey"
+            columns: ["offre_id"]
+            isOneToOne: false
+            referencedRelation: "offres"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       offres: {
         Row: {
@@ -622,7 +871,29 @@ export type Database = {
           total_price?: number
           updated_at?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "offres_demande_id_fkey"
+            columns: ["demande_id"]
+            isOneToOne: false
+            referencedRelation: "demandes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "offres_entreprise_id_fkey"
+            columns: ["entreprise_id"]
+            isOneToOne: false
+            referencedRelation: "entreprises"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "offres_entreprise_id_fkey"
+            columns: ["entreprise_id"]
+            isOneToOne: false
+            referencedRelation: "v_reliability_score"
+            referencedColumns: ["entreprise_id"]
+          },
+        ]
       }
       platform_settings: {
         Row: {
@@ -694,7 +965,29 @@ export type Database = {
           category_id?: number
           entreprise_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "prestataire_categories_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "prestataire_categories_entreprise_id_fkey"
+            columns: ["entreprise_id"]
+            isOneToOne: false
+            referencedRelation: "entreprises"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "prestataire_categories_entreprise_id_fkey"
+            columns: ["entreprise_id"]
+            isOneToOne: false
+            referencedRelation: "v_reliability_score"
+            referencedColumns: ["entreprise_id"]
+          },
+        ]
       }
       prestataire_subscriptions: {
         Row: {
@@ -727,7 +1020,29 @@ export type Database = {
           start_date?: string
           status?: Database["public"]["Enums"]["subscription_status"]
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "prestataire_subscriptions_entreprise_id_fkey"
+            columns: ["entreprise_id"]
+            isOneToOne: false
+            referencedRelation: "entreprises"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "prestataire_subscriptions_entreprise_id_fkey"
+            columns: ["entreprise_id"]
+            isOneToOne: false
+            referencedRelation: "v_reliability_score"
+            referencedColumns: ["entreprise_id"]
+          },
+          {
+            foreignKeyName: "prestataire_subscriptions_plan_id_fkey"
+            columns: ["plan_id"]
+            isOneToOne: false
+            referencedRelation: "subscription_plans"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       profiles: {
         Row: {
@@ -808,7 +1123,15 @@ export type Database = {
           updated_at?: string
           ville?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "projets_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       promotions: {
         Row: {
@@ -856,7 +1179,15 @@ export type Database = {
           target_min_seniority_days?: number | null
           target_ville?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "promotions_target_category_id_fkey"
+            columns: ["target_category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       reviews: {
         Row: {
@@ -885,6 +1216,59 @@ export type Database = {
           entreprise_id?: string
           id?: string
           rating?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reviews_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reviews_demande_id_fkey"
+            columns: ["demande_id"]
+            isOneToOne: false
+            referencedRelation: "demandes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reviews_entreprise_id_fkey"
+            columns: ["entreprise_id"]
+            isOneToOne: false
+            referencedRelation: "entreprises"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reviews_entreprise_id_fkey"
+            columns: ["entreprise_id"]
+            isOneToOne: false
+            referencedRelation: "v_reliability_score"
+            referencedColumns: ["entreprise_id"]
+          },
+        ]
+      }
+      spatial_ref_sys: {
+        Row: {
+          auth_name: string | null
+          auth_srid: number | null
+          proj4text: string | null
+          srid: number
+          srtext: string | null
+        }
+        Insert: {
+          auth_name?: string | null
+          auth_srid?: number | null
+          proj4text?: string | null
+          srid: number
+          srtext?: string | null
+        }
+        Update: {
+          auth_name?: string | null
+          auth_srid?: number | null
+          proj4text?: string | null
+          srid?: number
+          srtext?: string | null
         }
         Relationships: []
       }
@@ -916,7 +1300,29 @@ export type Database = {
           start_date?: string
           ville?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "sponsored_visibility_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "sponsored_visibility_entreprise_id_fkey"
+            columns: ["entreprise_id"]
+            isOneToOne: false
+            referencedRelation: "entreprises"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "sponsored_visibility_entreprise_id_fkey"
+            columns: ["entreprise_id"]
+            isOneToOne: false
+            referencedRelation: "v_reliability_score"
+            referencedColumns: ["entreprise_id"]
+          },
+        ]
       }
       sponsored_visibility_rates: {
         Row: {
@@ -940,7 +1346,15 @@ export type Database = {
           price_per_week_fcfa?: number
           ville?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "sponsored_visibility_rates_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       subscription_plans: {
         Row: {
@@ -1009,7 +1423,29 @@ export type Database = {
           reviewed_by?: string | null
           status?: Database["public"]["Enums"]["verification_request_status"]
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "verification_requests_entreprise_id_fkey"
+            columns: ["entreprise_id"]
+            isOneToOne: false
+            referencedRelation: "entreprises"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "verification_requests_entreprise_id_fkey"
+            columns: ["entreprise_id"]
+            isOneToOne: false
+            referencedRelation: "v_reliability_score"
+            referencedColumns: ["entreprise_id"]
+          },
+          {
+            foreignKeyName: "verification_requests_reviewed_by_fkey"
+            columns: ["reviewed_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       wallets: {
         Row: {
@@ -1033,7 +1469,22 @@ export type Database = {
           id?: string
           updated_at?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "wallets_entreprise_id_fkey"
+            columns: ["entreprise_id"]
+            isOneToOne: true
+            referencedRelation: "entreprises"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "wallets_entreprise_id_fkey"
+            columns: ["entreprise_id"]
+            isOneToOne: true
+            referencedRelation: "v_reliability_score"
+            referencedColumns: ["entreprise_id"]
+          },
+        ]
       }
     }
     Views: {
@@ -1049,6 +1500,26 @@ export type Database = {
       is_admin: { Args: Record<string, never>; Returns: boolean }
       is_entreprise_admin: { Args: { ent_id: string }; Returns: boolean }
       is_entreprise_member: { Args: { ent_id: string }; Returns: boolean }
+      prestataire_matches_demande: {
+        Args: { p_demande_id: string; p_prestataire_id: string }
+        Returns: boolean
+      }
+      rpc_creer_demande: {
+        Args: {
+          p_budget_max: number
+          p_budget_min: number
+          p_category_ids: number[]
+          p_date_evenement: string | null
+          p_description: string | null
+          p_lieu: string | null
+          p_project_size?: string
+          p_projet_id: string | null
+          p_titre: string
+          p_type_evenement: string | null
+          p_ville: string
+        }
+        Returns: string
+      }
       rpc_creer_entreprise: {
         Args: {
           p_nom: string

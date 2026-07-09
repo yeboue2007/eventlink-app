@@ -118,6 +118,11 @@ Domaines prévus (créés vides, remplis au fur et à mesure des phases) :
 `projets`, `demandes`, `offres`, `entreprises`, `credits`, `messagerie`,
 `notifications`, `calendrier`, `avis`, `favoris`, `recherche`, `administration`.
 
+`categories` est un domaine transverse minimal (uniquement des `queries/`) :
+plusieurs autres domaines (demandes, entreprises, recherche, administration)
+ont besoin de lire l'arbre des catégories — un seul point de lecture plutôt
+qu'une requête dupliquée dans chacun.
+
 ## 5. Règle transversale
 
 Avant toute fonctionnalité métier significative, se poser les questions du
