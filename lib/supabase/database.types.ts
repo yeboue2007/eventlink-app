@@ -1520,6 +1520,13 @@ export type Database = {
         }
         Returns: string
       }
+      rpc_repondre_offre: {
+        Args: {
+          p_decision: Database["public"]["Enums"]["offre_status"]
+          p_offre_id: string
+        }
+        Returns: undefined
+      }
       rpc_creer_entreprise: {
         Args: {
           p_nom: string

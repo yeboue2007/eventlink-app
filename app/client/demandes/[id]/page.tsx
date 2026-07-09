@@ -7,8 +7,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { getCurrentProfile } from "@/features/auth/queries/get-current-profile";
 import { DemandeStatusBadge } from "@/features/demandes/components/demande-status-badge";
 import { getDemandeById } from "@/features/demandes/queries/list-demandes";
+import { listMessagesForOffre } from "@/features/messagerie/queries/list-messages";
 import { OffreCard } from "@/features/offres/components/offre-card";
 import { listOffresForDemande } from "@/features/offres/queries/list-offres";
 
@@ -30,6 +32,10 @@ export default async function DemandeDetailPage({
   if (!demande) notFound();
 
   const offres = await listOffresForDemande(id);
+  const current = await getCurrentProfile();
+  const messagesParOffre = await Promise.all(
+    offres.map((offre) => listMessagesForOffre(offre.id))
+  );
 
   return (
     <div className="space-y-6">
@@ -119,8 +125,15 @@ export default async function DemandeDetailPage({
         </CardHeader>
         {offres.length > 0 && (
           <CardContent className="space-y-3">
-            {offres.map((offre) => (
-              <OffreCard key={offre.id} offre={offre} demandeId={demande.id} />
+            {offres.map((offre, index) => (
+              <OffreCard
+                key={offre.id}
+                offre={offre}
+                demandeId={demande.id}
+                currentUserId={current?.user.id ?? ""}
+                initialMessages={messagesParOffre[index]}
+                revalidateBasePath={`/client/demandes/${demande.id}`}
+              />
             ))}
           </CardContent>
         )}

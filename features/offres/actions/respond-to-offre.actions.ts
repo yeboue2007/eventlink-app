@@ -11,23 +11,16 @@ export async function respondToOffreAction(
 ) {
   const supabase = await createClient();
 
-  const { error } = await supabase
-    .from("offres")
-    .update({ status: decision })
-    .eq("id", offreId);
+  const { error } = await supabase.rpc("rpc_repondre_offre", {
+    p_offre_id: offreId,
+    p_decision: decision,
+  });
 
   if (error) {
     return { error: "Impossible de mettre à jour l'offre. Veuillez réessayer." };
   }
 
-  if (decision === "acceptee") {
-    await supabase
-      .from("demandes")
-      .update({ status: "en_negociation" })
-      .eq("id", demandeId)
-      .eq("status", "ouverte");
-  }
-
   revalidatePath(`/client/demandes/${demandeId}`);
+  revalidatePath("/client/demandes");
   return { success: true };
 }

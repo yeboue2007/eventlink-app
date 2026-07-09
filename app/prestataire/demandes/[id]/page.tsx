@@ -8,11 +8,14 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { getCurrentProfile } from "@/features/auth/queries/get-current-profile";
 import { getDemandeById } from "@/features/demandes/queries/list-demandes";
 import {
   getCurrentEntreprise,
   listSelectedCategoryIds,
 } from "@/features/entreprises/queries/get-current-entreprise";
+import { MessageThread } from "@/features/messagerie/components/message-thread";
+import { listMessagesForOffre } from "@/features/messagerie/queries/list-messages";
 import { CreateOffreForm } from "@/features/offres/components/create-offre-form";
 import { OffreStatusBadge } from "@/features/offres/components/offre-status-badge";
 import { listOffresForDemande } from "@/features/offres/queries/list-offres";
@@ -34,10 +37,11 @@ export default async function DemandePrestataireDetailPage({
   const entreprise = await getCurrentEntreprise();
   if (!entreprise) redirect("/prestataire");
 
-  const [demande, categoryIds, offres] = await Promise.all([
+  const [demande, categoryIds, offres, current] = await Promise.all([
     getDemandeById(id),
     listSelectedCategoryIds(entreprise.id),
     listOffresForDemande(id),
+    getCurrentProfile(),
   ]);
 
   if (!demande) notFound();
@@ -46,6 +50,7 @@ export default async function DemandePrestataireDetailPage({
     categoryIds.includes(lot.category_id)
   );
   const monOffre = offres.find((o) => o.entreprise_id === entreprise.id);
+  const mesMessages = monOffre ? await listMessagesForOffre(monOffre.id) : [];
 
   return (
     <div className="space-y-6">
@@ -114,6 +119,23 @@ export default async function DemandePrestataireDetailPage({
           )}
         </CardContent>
       </Card>
+
+      {monOffre && monOffre.status !== "refusee" && monOffre.status !== "retiree" && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Conversation avec le client</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <MessageThread
+              demandeId={demande.id}
+              offreId={monOffre.id}
+              currentUserId={current?.user.id ?? ""}
+              initialMessages={mesMessages}
+              revalidateBasePath={`/prestataire/demandes/${demande.id}`}
+            />
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 }
