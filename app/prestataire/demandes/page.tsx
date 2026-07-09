@@ -44,31 +44,33 @@ export default async function DemandesCorrespondantesPage() {
       ) : (
         <div className="grid gap-4">
           {demandes.map((demande) => (
-            <Card key={demande.id}>
-              <CardContent className="space-y-2 py-5">
-                <div className="flex items-center justify-between">
-                  <h2 className="font-medium text-foreground">{demande.titre}</h2>
-                  <span className="text-sm font-medium text-el-violet">
-                    {formatFcfa(demande.budget_min)} – {formatFcfa(demande.budget_max)}
-                  </span>
-                </div>
-                <p className="text-sm text-muted-foreground">
-                  {demande.ville}
-                  {demande.date_evenement &&
-                    ` · ${new Date(demande.date_evenement).toLocaleDateString("fr-FR")}`}
-                </p>
-                <div className="flex flex-wrap gap-1.5">
-                  {demande.demande_lots.map((lot) => (
-                    <span
-                      key={lot.id}
-                      className="rounded-full bg-secondary px-2 py-0.5 text-xs text-el-violet"
-                    >
-                      {lot.categories?.label}
+            <Link key={demande.id} href={`/prestataire/demandes/${demande.id}`}>
+              <Card className="transition-shadow hover:shadow-md">
+                <CardContent className="space-y-2 py-5">
+                  <div className="flex items-center justify-between">
+                    <h2 className="font-medium text-foreground">{demande.titre}</h2>
+                    <span className="text-sm font-medium text-el-violet">
+                      {formatFcfa(demande.budget_min)} – {formatFcfa(demande.budget_max)}
                     </span>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
+                  </div>
+                  <p className="text-sm text-muted-foreground">
+                    {demande.ville}
+                    {demande.date_evenement &&
+                      ` · ${new Date(demande.date_evenement).toLocaleDateString("fr-FR")}`}
+                  </p>
+                  <div className="flex flex-wrap gap-1.5">
+                    {demande.demande_lots.map((lot) => (
+                      <span
+                        key={lot.id}
+                        className="rounded-full bg-secondary px-2 py-0.5 text-xs text-el-violet"
+                      >
+                        {lot.categories?.label}
+                      </span>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            </Link>
           ))}
         </div>
       )}

@@ -9,6 +9,8 @@ import {
 } from "@/components/ui/card";
 import { DemandeStatusBadge } from "@/features/demandes/components/demande-status-badge";
 import { getDemandeById } from "@/features/demandes/queries/list-demandes";
+import { OffreCard } from "@/features/offres/components/offre-card";
+import { listOffresForDemande } from "@/features/offres/queries/list-offres";
 
 function formatFcfa(value: number) {
   return new Intl.NumberFormat("fr-FR").format(value) + " FCFA";
@@ -26,6 +28,8 @@ export default async function DemandeDetailPage({
   const demande = await getDemandeById(id);
 
   if (!demande) notFound();
+
+  const offres = await listOffresForDemande(id);
 
   return (
     <div className="space-y-6">
@@ -106,11 +110,20 @@ export default async function DemandeDetailPage({
       <Card>
         <CardHeader>
           <CardTitle>Offres reçues</CardTitle>
-          <CardDescription>
-            Aucune offre pour le moment — la réception et la comparaison des
-            offres arrivent dans une prochaine étape.
-          </CardDescription>
+          {offres.length === 0 && (
+            <CardDescription>
+              Aucune offre pour le moment — les prestataires concernés ont été
+              notifiés.
+            </CardDescription>
+          )}
         </CardHeader>
+        {offres.length > 0 && (
+          <CardContent className="space-y-3">
+            {offres.map((offre) => (
+              <OffreCard key={offre.id} offre={offre} demandeId={demande.id} />
+            ))}
+          </CardContent>
+        )}
       </Card>
     </div>
   );
