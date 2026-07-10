@@ -48,3 +48,25 @@ export async function listSelectedCategoryIds(entrepriseId: string): Promise<num
   if (error) throw error;
   return data.map((row) => row.category_id);
 }
+
+/** Profil public d'une entreprise (fiche prestataire consultable par tous). */
+export async function getPublicEntrepriseProfile(entrepriseId: string) {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("entreprises")
+    .select("*, prestataire_categories(categories(*))")
+    .eq("id", entrepriseId)
+    .is("deleted_at", null)
+    .maybeSingle();
+
+  if (error) throw error;
+  if (!data) return null;
+
+  const { data: rating } = await supabase
+    .from("v_entreprise_rating")
+    .select("*")
+    .eq("entreprise_id", entrepriseId)
+    .maybeSingle();
+
+  return { ...data, note_moyenne: rating?.note_moyenne ?? null, nb_avis: rating?.nb_avis ?? 0 };
+}

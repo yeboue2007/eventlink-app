@@ -8,11 +8,15 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { getCurrentProfile } from "@/features/auth/queries/get-current-profile";
+import { StarRating } from "@/features/avis/components/star-rating";
+import { ReviewForm } from "@/features/avis/components/review-form";
+import { getMyReviewForDemande } from "@/features/avis/queries/list-reviews";
 import { DemandeStatusBadge } from "@/features/demandes/components/demande-status-badge";
 import { getDemandeById } from "@/features/demandes/queries/list-demandes";
 import { listMessagesForOffre } from "@/features/messagerie/queries/list-messages";
 import { OffreCard } from "@/features/offres/components/offre-card";
 import { listOffresForDemande } from "@/features/offres/queries/list-offres";
+import { MarkProjetTermineButton } from "@/features/projets/components/mark-projet-termine-button";
 
 function formatFcfa(value: number) {
   return new Intl.NumberFormat("fr-FR").format(value) + " FCFA";
@@ -35,6 +39,11 @@ export default async function DemandeDetailPage({
   const current = await getCurrentProfile();
   const messagesParOffre = await Promise.all(
     offres.map((offre) => listMessagesForOffre(offre.id))
+  );
+
+  const offresAcceptees = offres.filter((o) => o.status === "acceptee");
+  const avisExistants = await Promise.all(
+    offresAcceptees.map((offre) => getMyReviewForDemande(demande.id, offre.entreprise_id))
   );
 
   return (
@@ -138,6 +147,48 @@ export default async function DemandeDetailPage({
           </CardContent>
         )}
       </Card>
+
+      {offresAcceptees.length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Avis</CardTitle>
+            {demande.projets?.status !== "termine" && (
+              <CardDescription>
+                Marquez l&rsquo;événement comme terminé pour pouvoir laisser un
+                avis à vos prestataires.
+              </CardDescription>
+            )}
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {demande.projets?.status !== "termine" && demande.projets && (
+              <MarkProjetTermineButton
+                projetId={demande.projets.id}
+                demandeId={demande.id}
+              />
+            )}
+
+            {demande.projets?.status === "termine" &&
+              offresAcceptees.map((offre, index) => {
+                const monAvis = avisExistants[index];
+                return (
+                  <div key={offre.id} className="space-y-2 border-b border-border pb-4 last:border-0">
+                    <p className="font-medium text-foreground">{offre.entreprises?.nom}</p>
+                    {monAvis ? (
+                      <div className="space-y-1">
+                        <StarRating rating={monAvis.rating} />
+                        {monAvis.comment && (
+                          <p className="text-sm text-muted-foreground">{monAvis.comment}</p>
+                        )}
+                      </div>
+                    ) : (
+                      <ReviewForm demandeId={demande.id} entrepriseId={offre.entreprise_id} />
+                    )}
+                  </div>
+                );
+              })}
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 }
