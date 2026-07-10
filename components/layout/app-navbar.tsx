@@ -4,6 +4,8 @@ import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { signOutAction } from "@/features/auth/actions/auth.actions";
+import { NotificationsBell } from "@/features/notifications/components/notifications-bell";
+import type { Tables } from "@/lib/supabase/database.types";
 
 const LABEL_ROLE = {
   client: "Client",
@@ -14,9 +16,13 @@ const LABEL_ROLE = {
 export function AppNavbar({
   role,
   homeHref,
+  profileId,
+  initialNotifications,
 }: {
   role: keyof typeof LABEL_ROLE;
   homeHref: string;
+  profileId: string;
+  initialNotifications: Tables<"notifications">[];
 }) {
   return (
     <header className="border-b border-border bg-card">
@@ -32,6 +38,7 @@ export function AppNavbar({
         </Link>
 
         <div className="flex items-center gap-3">
+          <NotificationsBell profileId={profileId} initialNotifications={initialNotifications} />
           <Badge variant="trust">{LABEL_ROLE[role]}</Badge>
           <form action={signOutAction}>
             <Button type="submit" variant="ghost" size="sm">
