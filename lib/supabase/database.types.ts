@@ -1560,6 +1560,14 @@ export type Database = {
       }
     }
     Views: {
+      v_entreprise_rating: {
+        Row: {
+          entreprise_id: string | null
+          note_moyenne: number | null
+          nb_avis: number | null
+        }
+        Relationships: []
+      }
       v_reliability_score: {
         Row: {
           entreprise_id: string | null

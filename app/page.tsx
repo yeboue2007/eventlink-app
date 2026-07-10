@@ -95,7 +95,9 @@ export default function DesignSystemCheckPage() {
         <CardContent className="space-y-6">
           <div className="flex flex-wrap gap-3">
             <Button variant="primary">Publier une demande</Button>
-            <Button variant="default">Explorer les prestataires</Button>
+            <Button asChild variant="default">
+              <Link href="/recherche">Explorer les prestataires</Link>
+            </Button>
             <Button variant="outline">En savoir plus</Button>
             <Button variant="ghost">Annuler</Button>
           </div>
