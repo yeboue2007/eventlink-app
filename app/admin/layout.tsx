@@ -1,4 +1,4 @@
-import { LayoutDashboard } from "lucide-react";
+import { CreditCard, LayoutDashboard, Settings, Tags } from "lucide-react";
 import { redirect } from "next/navigation";
 
 import { AppNavbar } from "@/components/layout/app-navbar";
@@ -6,9 +6,13 @@ import { Sidebar, type SidebarNavItem } from "@/components/layout/sidebar";
 import { getCurrentProfile } from "@/features/auth/queries/get-current-profile";
 import { listRecentNotifications } from "@/features/notifications/queries/list-notifications";
 
-// Complété au fil des phases suivantes (paramètres commerciaux, utilisateurs, stats...).
+// Complété au fil des phases suivantes (promotions, utilisateurs, stats...).
 const NAV_ITEMS: SidebarNavItem[] = [
   { label: "Tableau de bord", href: "/admin", icon: LayoutDashboard },
+  { label: "Catégories", href: "/admin/categories", icon: Tags },
+  { label: "Packs de crédits", href: "/admin/credit-packs", icon: CreditCard },
+  { label: "Abonnements", href: "/admin/subscription-plans", icon: CreditCard },
+  { label: "Paramètres généraux", href: "/admin/parametres", icon: Settings },
 ];
 
 export default async function AdminLayout({
