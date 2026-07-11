@@ -15,19 +15,17 @@ const LABEL_ROLE = {
 
 export function AppNavbar({
   role,
-  homeHref,
   profileId,
   initialNotifications,
 }: {
   role: keyof typeof LABEL_ROLE;
-  homeHref: string;
   profileId: string;
   initialNotifications: Tables<"notifications">[];
 }) {
   return (
     <header className="border-b border-border bg-card">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-3">
-        <Link href={homeHref}>
+        <Link href="/">
           <Logo size="sm" />
         </Link>
 

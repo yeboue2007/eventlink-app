@@ -15,7 +15,9 @@ export async function listOffresForDemande(demandeId: string): Promise<OffreAvec
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("offres")
-    .select("*, offre_lots(*, demande_lots(*, categories(*))), entreprises(*)")
+    .select(
+      "*, offre_lots(*, demande_lots(*, categories(*))), entreprises!offres_entreprise_id_fkey(*)"
+    )
     .eq("demande_id", demandeId)
     .is("deleted_at", null)
     .order("created_at", { ascending: false });

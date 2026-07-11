@@ -31,7 +31,6 @@ export default async function PrestataireLayout({
     <div className="flex min-h-full flex-1 flex-col">
       <AppNavbar
         role="prestataire"
-        homeHref="/prestataire"
         profileId={current.user.id}
         initialNotifications={notifications}
       />

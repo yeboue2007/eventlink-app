@@ -28,7 +28,6 @@ export default async function ClientLayout({
     <div className="flex min-h-full flex-1 flex-col">
       <AppNavbar
         role="client"
-        homeHref="/client"
         profileId={current.user.id}
         initialNotifications={notifications}
       />

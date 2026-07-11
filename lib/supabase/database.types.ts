@@ -1600,6 +1600,10 @@ export type Database = {
         }
         Returns: string
       }
+      rpc_definir_categories_prestataire: {
+        Args: { p_entreprise_id: string; p_category_ids: number[] }
+        Returns: undefined
+      }
       rpc_creer_commande_abonnement: {
         Args: { p_plan_id: string; p_cinetpay_transaction_id: string }
         Returns: string

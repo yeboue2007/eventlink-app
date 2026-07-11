@@ -31,7 +31,6 @@ export default async function AdminLayout({
     <div className="flex min-h-full flex-1 flex-col">
       <AppNavbar
         role="admin"
-        homeHref="/admin"
         profileId={current.user.id}
         initialNotifications={notifications}
       />

@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useEffect } from "react";
+import { useActionState, useEffect, useState } from "react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
@@ -22,11 +22,29 @@ export function UpdateCategoriesForm({
     undefined
   );
 
+  // État contrôlé (plutôt que defaultChecked) : garantit que les cases
+  // reflètent toujours fidèlement ce qui a réellement été enregistré,
+  // au lieu de dépendre du cycle de re-render d'un input non contrôlé
+  // (ce qui donnait l'impression trompeuse que "ça ne s'enregistre pas").
+  const [checked, setChecked] = useState<Set<number>>(new Set(selectedIds));
+
   useEffect(() => {
     if (state?.success) {
       toast.success("Vos catégories ont été mises à jour");
     }
-  }, [state?.success]);
+    if (state?.error) {
+      toast.error(state.error);
+    }
+  }, [state]);
+
+  function toggle(categoryId: number) {
+    setChecked((current) => {
+      const next = new Set(current);
+      if (next.has(categoryId)) next.delete(categoryId);
+      else next.add(categoryId);
+      return next;
+    });
+  }
 
   return (
     <form action={formAction} className="space-y-4">
@@ -46,7 +64,8 @@ export function UpdateCategoriesForm({
             <Checkbox
               name="categoryIds"
               value={category.id}
-              defaultChecked={selectedIds.includes(category.id)}
+              checked={checked.has(category.id)}
+              onCheckedChange={() => toggle(category.id)}
             />
             {category.label}
           </label>

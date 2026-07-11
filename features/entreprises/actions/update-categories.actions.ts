@@ -5,7 +5,9 @@ import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { updateCategoriesSchema } from "@/features/entreprises/schemas/update-categories.schema";
 
-export type UpdateCategoriesActionState = { error?: string; success?: boolean } | undefined;
+export type UpdateCategoriesActionState =
+  | { error?: string; success?: boolean; savedIds?: number[] }
+  | undefined;
 
 export async function updateCategoriesAction(
   entrepriseId: string,
@@ -21,31 +23,20 @@ export async function updateCategoriesAction(
   }
 
   const supabase = await createClient();
+  // RPC atomique : remplace la liste en une seule transaction, jamais de
+  // désynchronisation possible (ancienne version : DELETE puis INSERT en
+  // deux appels distincts, avec risque de tout perdre si l'INSERT échouait).
+  const { error } = await supabase.rpc("rpc_definir_categories_prestataire", {
+    p_entreprise_id: entrepriseId,
+    p_category_ids: parsed.data.categoryIds,
+  });
 
-  // Remplace intégralement la déclaration (simple et cohérent avec un
-  // formulaire "tout ou rien" — la RLS garantit que seul un membre de
-  // l'entreprise peut modifier ses propres catégories).
-  const { error: deleteError } = await supabase
-    .from("prestataire_categories")
-    .delete()
-    .eq("entreprise_id", entrepriseId);
-
-  if (deleteError) {
-    return { error: "Impossible de mettre à jour vos catégories. Veuillez réessayer." };
-  }
-
-  const { error: insertError } = await supabase.from("prestataire_categories").insert(
-    parsed.data.categoryIds.map((categoryId) => ({
-      entreprise_id: entrepriseId,
-      category_id: categoryId,
-    }))
-  );
-
-  if (insertError) {
+  if (error) {
     return { error: "Impossible de mettre à jour vos catégories. Veuillez réessayer." };
   }
 
   revalidatePath("/prestataire/parametres/categories");
   revalidatePath("/prestataire/demandes");
-  return { success: true };
+  revalidatePath("/prestataire");
+  return { success: true, savedIds: parsed.data.categoryIds };
 }
