@@ -8,11 +8,11 @@ import { listRecentNotifications } from "@/features/notifications/queries/list-n
 
 // Complété au fil des phases suivantes (calendrier...).
 const NAV_ITEMS: SidebarNavItem[] = [
-  { label: "Tableau de bord", href: "/prestataire", icon: LayoutDashboard },
-  { label: "Demandes correspondantes", href: "/prestataire/demandes", icon: FileText },
-  { label: "Mes crédits", href: "/prestataire/credits", icon: Coins },
-  { label: "Mon abonnement", href: "/prestataire/abonnement", icon: CreditCard },
-  { label: "Mes catégories", href: "/prestataire/parametres/categories", icon: Tags },
+  { label: "Tableau de bord", href: "/prestataire", icon: <LayoutDashboard className="size-4" /> },
+  { label: "Demandes correspondantes", href: "/prestataire/demandes", icon: <FileText className="size-4" /> },
+  { label: "Mes crédits", href: "/prestataire/credits", icon: <Coins className="size-4" /> },
+  { label: "Mon abonnement", href: "/prestataire/abonnement", icon: <CreditCard className="size-4" /> },
+  { label: "Mes catégories", href: "/prestataire/parametres/categories", icon: <Tags className="size-4" /> },
 ];
 
 export default async function PrestataireLayout({

@@ -1,5 +1,6 @@
-import Image from "next/image";
 import Link from "next/link";
+
+import { Logo } from "@/components/marketing/logo";
 
 const LIENS = [
   {
@@ -25,13 +26,7 @@ function Footer() {
       <div className="mx-auto max-w-6xl px-6 py-12">
         <div className="grid gap-8 sm:grid-cols-3">
           <div className="space-y-3">
-            <Image
-              src="/brand/eventlink-logo.png"
-              alt="EventLink"
-              width={140}
-              height={40}
-              className="h-8 w-auto"
-            />
+            <Logo size="sm" />
             <p className="text-sm text-muted-foreground">
               Connexion. Confiance. Événements réussis.
             </p>

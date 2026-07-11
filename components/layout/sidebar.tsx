@@ -2,14 +2,16 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import type { LucideIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
 export type SidebarNavItem = {
   label: string;
   href: string;
-  icon: LucideIcon;
+  /** Icône déjà rendue côté serveur (ex. `<LayoutDashboard className="size-4" />`),
+   *  jamais une référence de composant — React interdit de faire transiter une
+   *  fonction d'un Server Component vers un Client Component en tant que prop. */
+  icon: React.ReactNode;
 };
 
 /**
@@ -25,7 +27,6 @@ function Sidebar({ items }: { items: SidebarNavItem[] }) {
       <nav className="flex flex-col gap-1 p-4">
         {items.map((item) => {
           const isActive = pathname === item.href || pathname.startsWith(`${item.href}/`);
-          const Icon = item.icon;
           return (
             <Link
               key={item.href}
@@ -38,7 +39,7 @@ function Sidebar({ items }: { items: SidebarNavItem[] }) {
               )}
               aria-current={isActive ? "page" : undefined}
             >
-              <Icon className="size-4" />
+              {item.icon}
               {item.label}
             </Link>
           );

@@ -1,8 +1,8 @@
-import Image from "next/image";
 import Link from "next/link";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Logo } from "@/components/marketing/logo";
 import { signOutAction } from "@/features/auth/actions/auth.actions";
 import { NotificationsBell } from "@/features/notifications/components/notifications-bell";
 import type { Tables } from "@/lib/supabase/database.types";
@@ -27,14 +27,8 @@ export function AppNavbar({
   return (
     <header className="border-b border-border bg-card">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-3">
-        <Link href={homeHref} className="flex items-center gap-2">
-          <Image
-            src="/brand/eventlink-logo.png"
-            alt="EventLink"
-            width={140}
-            height={40}
-            className="h-8 w-auto"
-          />
+        <Link href={homeHref}>
+          <Logo size="sm" />
         </Link>
 
         <div className="flex items-center gap-3">

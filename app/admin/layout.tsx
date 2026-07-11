@@ -8,11 +8,11 @@ import { listRecentNotifications } from "@/features/notifications/queries/list-n
 
 // Complété au fil des phases suivantes (promotions, utilisateurs, stats...).
 const NAV_ITEMS: SidebarNavItem[] = [
-  { label: "Tableau de bord", href: "/admin", icon: LayoutDashboard },
-  { label: "Catégories", href: "/admin/categories", icon: Tags },
-  { label: "Packs de crédits", href: "/admin/credit-packs", icon: CreditCard },
-  { label: "Abonnements", href: "/admin/subscription-plans", icon: CreditCard },
-  { label: "Paramètres généraux", href: "/admin/parametres", icon: Settings },
+  { label: "Tableau de bord", href: "/admin", icon: <LayoutDashboard className="size-4" /> },
+  { label: "Catégories", href: "/admin/categories", icon: <Tags className="size-4" /> },
+  { label: "Packs de crédits", href: "/admin/credit-packs", icon: <CreditCard className="size-4" /> },
+  { label: "Abonnements", href: "/admin/subscription-plans", icon: <CreditCard className="size-4" /> },
+  { label: "Paramètres généraux", href: "/admin/parametres", icon: <Settings className="size-4" /> },
 ];
 
 export default async function AdminLayout({

@@ -1,7 +1,7 @@
-import Image from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
+import { Logo } from "@/components/marketing/logo";
 import { createClient } from "@/lib/supabase/server";
 
 export default async function AuthLayout({
@@ -21,15 +21,8 @@ export default async function AuthLayout({
 
   return (
     <main className="flex min-h-full flex-1 flex-col items-center justify-center gap-8 bg-background px-4 py-16">
-      <Link href="/" className="flex items-center gap-2">
-        <Image
-          src="/brand/eventlink-logo.png"
-          alt="EventLink"
-          width={160}
-          height={48}
-          className="h-10 w-auto"
-          priority
-        />
+      <Link href="/">
+        <Logo size="lg" />
       </Link>
       <div className="w-full max-w-md rounded-xl border border-border bg-card p-8 shadow-sm">
         {children}

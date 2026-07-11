@@ -1,7 +1,7 @@
-import Image from "next/image";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
+import { Logo } from "@/components/marketing/logo";
 import { getCurrentProfile } from "@/features/auth/queries/get-current-profile";
 
 export async function PublicNavbar() {
@@ -10,15 +10,8 @@ export async function PublicNavbar() {
   return (
     <header className="border-b border-border bg-card/80 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-3">
-        <Link href="/" className="flex items-center gap-2">
-          <Image
-            src="/brand/eventlink-logo.png"
-            alt="EventLink"
-            width={140}
-            height={40}
-            className="h-8 w-auto"
-            priority
-          />
+        <Link href="/">
+          <Logo size="sm" />
         </Link>
 
         <nav className="flex items-center gap-2 sm:gap-3">

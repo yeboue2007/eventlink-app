@@ -8,8 +8,8 @@ import { listRecentNotifications } from "@/features/notifications/queries/list-n
 
 // Complété au fil des phases suivantes (favoris, messages...).
 const NAV_ITEMS: SidebarNavItem[] = [
-  { label: "Tableau de bord", href: "/client", icon: LayoutDashboard },
-  { label: "Mes demandes", href: "/client/demandes", icon: FileText },
+  { label: "Tableau de bord", href: "/client", icon: <LayoutDashboard className="size-4" /> },
+  { label: "Mes demandes", href: "/client/demandes", icon: <FileText className="size-4" /> },
 ];
 
 export default async function ClientLayout({
