@@ -1,4 +1,4 @@
-import { Coins, CreditCard, FileText, LayoutDashboard, Tags } from "lucide-react";
+import { Coins, CreditCard, FileText, LayoutDashboard, User, Tags } from "lucide-react";
 import { redirect } from "next/navigation";
 
 import { AppNavbar } from "@/components/layout/app-navbar";
@@ -12,6 +12,7 @@ const NAV_ITEMS: SidebarNavItem[] = [
   { label: "Demandes correspondantes", href: "/prestataire/demandes", icon: <FileText className="size-4" /> },
   { label: "Mes crédits", href: "/prestataire/credits", icon: <Coins className="size-4" /> },
   { label: "Mon abonnement", href: "/prestataire/abonnement", icon: <CreditCard className="size-4" /> },
+  { label: "Mon profil", href: "/prestataire/parametres/profil", icon: <User className="size-4" /> },
   { label: "Mes catégories", href: "/prestataire/parametres/categories", icon: <Tags className="size-4" /> },
 ];
 

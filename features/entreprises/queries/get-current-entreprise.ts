@@ -70,3 +70,16 @@ export async function getPublicEntrepriseProfile(entrepriseId: string) {
 
   return { ...data, note_moyenne: rating?.note_moyenne ?? null, nb_avis: rating?.nb_avis ?? 0 };
 }
+
+/** Photos du portfolio d'une entreprise, dans leur ordre d'affichage. */
+export async function listMediaFiles(entrepriseId: string): Promise<Tables<"media_files">[]> {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("media_files")
+    .select("*")
+    .eq("entreprise_id", entrepriseId)
+    .order("display_order", { ascending: true });
+
+  if (error) throw error;
+  return data;
+}

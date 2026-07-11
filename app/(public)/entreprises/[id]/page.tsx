@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import Image from "next/image";
 
 import { Badge } from "@/components/ui/badge";
 import {
@@ -10,7 +11,10 @@ import {
 } from "@/components/ui/card";
 import { StarRating } from "@/features/avis/components/star-rating";
 import { listReviewsForEntreprise } from "@/features/avis/queries/list-reviews";
-import { getPublicEntrepriseProfile } from "@/features/entreprises/queries/get-current-entreprise";
+import {
+  getPublicEntrepriseProfile,
+  listMediaFiles,
+} from "@/features/entreprises/queries/get-current-entreprise";
 
 const LABEL_VERIFICATION: Record<string, string> = {
   niveau_1: "Téléphone vérifié",
@@ -28,6 +32,7 @@ export default async function EntrepriseProfilPage({
   if (!entreprise) notFound();
 
   const avis = await listReviewsForEntreprise(id);
+  const media = await listMediaFiles(id);
   const categories = entreprise.prestataire_categories
     .map((pc) => pc.categories?.label)
     .filter(Boolean);
@@ -67,6 +72,19 @@ export default async function EntrepriseProfilPage({
         <Card>
           <CardContent className="py-5 text-sm text-foreground">{entreprise.bio}</CardContent>
         </Card>
+      )}
+
+      {media.length > 0 && (
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+          {media.map((item) => (
+            <div
+              key={item.id}
+              className="relative aspect-square overflow-hidden rounded-lg border border-border"
+            >
+              <Image src={item.url} alt="" fill className="object-cover" unoptimized />
+            </div>
+          ))}
+        </div>
       )}
 
       <Card>
