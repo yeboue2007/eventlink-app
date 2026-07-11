@@ -34,7 +34,7 @@ export default async function RecherchePage({
   }
 
   return (
-    <main className="mx-auto w-full max-w-6xl flex-1 space-y-6 px-6 py-10">
+    <div className="mx-auto w-full max-w-6xl space-y-6 px-6 py-10">
       <div>
         <h1 className="text-2xl font-semibold text-foreground">
           Trouvez votre prestataire
@@ -60,6 +60,6 @@ export default async function RecherchePage({
       )}
 
       <Pagination page={page} totalPages={totalPages} hrefForPage={hrefForPage} />
-    </main>
+    </div>
   );
 }

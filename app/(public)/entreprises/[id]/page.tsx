@@ -33,7 +33,7 @@ export default async function EntrepriseProfilPage({
     .filter(Boolean);
 
   return (
-    <main className="mx-auto w-full max-w-3xl flex-1 space-y-6 px-6 py-10">
+    <div className="mx-auto w-full max-w-3xl space-y-6 px-6 py-10">
       <div className="space-y-2">
         <div className="flex flex-wrap items-center gap-2">
           <h1 className="text-2xl font-semibold text-foreground">{entreprise.nom}</h1>
@@ -97,6 +97,6 @@ export default async function EntrepriseProfilPage({
           </CardContent>
         )}
       </Card>
-    </main>
+    </div>
   );
 }
