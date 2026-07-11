@@ -1,4 +1,4 @@
-import { Coins, CreditCard, FileText, LayoutDashboard, User, Tags } from "lucide-react";
+import { Calendar, Coins, CreditCard, FileText, LayoutDashboard, User, Tags } from "lucide-react";
 import { redirect } from "next/navigation";
 
 import { AppNavbar } from "@/components/layout/app-navbar";
@@ -6,10 +6,10 @@ import { Sidebar, type SidebarNavItem } from "@/components/layout/sidebar";
 import { getCurrentProfile } from "@/features/auth/queries/get-current-profile";
 import { listRecentNotifications } from "@/features/notifications/queries/list-notifications";
 
-// Complété au fil des phases suivantes (calendrier...).
 const NAV_ITEMS: SidebarNavItem[] = [
   { label: "Tableau de bord", href: "/prestataire", icon: <LayoutDashboard className="size-4" /> },
   { label: "Demandes correspondantes", href: "/prestataire/demandes", icon: <FileText className="size-4" /> },
+  { label: "Mon calendrier", href: "/prestataire/calendrier", icon: <Calendar className="size-4" /> },
   { label: "Mes crédits", href: "/prestataire/credits", icon: <Coins className="size-4" /> },
   { label: "Mon abonnement", href: "/prestataire/abonnement", icon: <CreditCard className="size-4" /> },
   { label: "Mon profil", href: "/prestataire/parametres/profil", icon: <User className="size-4" /> },
