@@ -1,6 +1,6 @@
 "use server";
 
-import { demanderCompletion } from "@/features/ia/lib/anthropic";
+import { demanderCompletion } from "@/features/ia/lib/gemini";
 import { isIaActivee } from "@/features/ia/lib/is-ia-enabled";
 
 export type ImproveDescriptionState =
