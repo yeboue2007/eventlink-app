@@ -1,4 +1,4 @@
-import { CreditCard, LayoutDashboard, Settings, Tags } from "lucide-react";
+import { BarChart3, CreditCard, LayoutDashboard, Settings, Tags } from "lucide-react";
 import { redirect } from "next/navigation";
 
 import { AppNavbar } from "@/components/layout/app-navbar";
@@ -6,9 +6,10 @@ import { Sidebar, type SidebarNavItem } from "@/components/layout/sidebar";
 import { getCurrentProfile } from "@/features/auth/queries/get-current-profile";
 import { listRecentNotifications } from "@/features/notifications/queries/list-notifications";
 
-// Complété au fil des phases suivantes (promotions, utilisateurs, stats...).
+// Complété au fil des phases suivantes (promotions, utilisateurs...).
 const NAV_ITEMS: SidebarNavItem[] = [
   { label: "Tableau de bord", href: "/admin", icon: <LayoutDashboard className="size-4" /> },
+  { label: "Statistiques", href: "/admin/statistiques", icon: <BarChart3 className="size-4" /> },
   { label: "Catégories", href: "/admin/categories", icon: <Tags className="size-4" /> },
   { label: "Packs de crédits", href: "/admin/credit-packs", icon: <CreditCard className="size-4" /> },
   { label: "Abonnements", href: "/admin/subscription-plans", icon: <CreditCard className="size-4" /> },

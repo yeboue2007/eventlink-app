@@ -1,9 +1,15 @@
 import Link from "next/link";
-import { CreditCard, Settings, Tags } from "lucide-react";
+import { BarChart3, CreditCard, Settings, Tags } from "lucide-react";
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 const RACCOURCIS = [
+  {
+    href: "/admin/statistiques",
+    icon: BarChart3,
+    titre: "Statistiques",
+    description: "Demandes, offres, revenus, taux de conversion.",
+  },
   {
     href: "/admin/categories",
     icon: Tags,

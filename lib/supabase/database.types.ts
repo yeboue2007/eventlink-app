@@ -1600,6 +1600,14 @@ export type Database = {
         }
         Returns: string
       }
+      rpc_calculer_stats_du_jour: {
+        Args: { p_date?: string }
+        Returns: undefined
+      }
+      rpc_recalculer_stats_admin: {
+        Args: { p_date?: string }
+        Returns: undefined
+      }
       rpc_definir_categories_prestataire: {
         Args: { p_entreprise_id: string; p_category_ids: number[] }
         Returns: undefined

@@ -1,6 +1,8 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState, useTransition } from "react";
+import { Sparkles } from "lucide-react";
+import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -9,6 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { createDemandeAction } from "@/features/demandes/actions/demandes.actions";
+import { improveDescriptionAction } from "@/features/ia/actions/improve-description.actions";
 import type { Tables } from "@/lib/supabase/database.types";
 
 const TYPES_EVENEMENT = [
@@ -26,6 +29,20 @@ export function CreateDemandeForm({
   categories: Tables<"categories">[];
 }) {
   const [state, formAction, isPending] = useActionState(createDemandeAction, undefined);
+  const [description, setDescription] = useState("");
+  const [isImproving, startImproving] = useTransition();
+
+  function ameliorerAvecIA() {
+    startImproving(async () => {
+      const result = await improveDescriptionAction(description);
+      if ("error" in result) {
+        toast.error(result.error);
+      } else {
+        setDescription(result.suggestion);
+        toast.success("Description reformulée par l'assistant.");
+      }
+    });
+  }
 
   return (
     <form action={formAction} className="space-y-6">
@@ -122,12 +139,26 @@ export function CreateDemandeForm({
           </div>
 
           <div className="space-y-1.5">
-            <Label htmlFor="description">Description (optionnel)</Label>
+            <div className="flex items-center justify-between">
+              <Label htmlFor="description">Description (optionnel)</Label>
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                disabled={isImproving || description.trim().length < 10}
+                onClick={ameliorerAvecIA}
+              >
+                <Sparkles className="size-3.5" />
+                {isImproving ? "Reformulation…" : "Améliorer avec l'IA"}
+              </Button>
+            </div>
             <Textarea
               id="description"
               name="description"
               placeholder="Décrivez votre besoin plus en détail…"
               rows={4}
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
             />
           </div>
         </CardContent>
