@@ -30,7 +30,8 @@ export async function improveDescriptionAction(rawText: string): Promise<Improve
       300
     );
     return { suggestion };
-  } catch {
+  } catch (error) {
+    console.error("[improveDescriptionAction] échec de l'appel Gemini :", error);
     return { error: "L'assistant de rédaction est momentanément indisponible." };
   }
 }

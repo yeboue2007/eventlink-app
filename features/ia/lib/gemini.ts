@@ -1,6 +1,6 @@
 import "server-only";
 
-const GEMINI_MODEL = "gemini-2.5-flash";
+const GEMINI_MODEL = "gemini-flash-latest";
 const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`;
 
 /**
@@ -22,11 +22,14 @@ export async function demanderCompletion(prompt: string, maxTokens = 400): Promi
   });
 
   if (!response.ok) {
-    throw new Error(`Gemini a répondu avec le statut ${response.status}`);
+    const corps = await response.text().catch(() => "");
+    throw new Error(`Gemini a répondu avec le statut ${response.status} : ${corps.slice(0, 500)}`);
   }
 
   const data = await response.json();
   const texte: string | undefined = data?.candidates?.[0]?.content?.parts?.[0]?.text;
-  if (!texte) throw new Error("Réponse IA vide.");
+  if (!texte) {
+    throw new Error(`Réponse IA vide. Payload reçu : ${JSON.stringify(data).slice(0, 500)}`);
+  }
   return texte.trim();
 }

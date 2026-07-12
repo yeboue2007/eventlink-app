@@ -46,7 +46,8 @@ export async function generateUploadUrlAction(
     );
 
     return { uploadUrl, publicUrl: getR2PublicUrl(key) };
-  } catch {
+  } catch (error) {
+    console.error("[generateUploadUrlAction] échec de génération de l'URL R2 :", error);
     return { error: "Stockage média non configuré. Contactez l'administrateur." };
   }
 }

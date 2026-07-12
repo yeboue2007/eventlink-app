@@ -67,7 +67,9 @@ export function MediaGallery({
 
     setIsUploading(true);
     try {
-      const blob = await compresserImage(file);
+      const blob = await compresserImage(file).catch((err) => {
+        throw new Error(`Compression de l'image échouée : ${err instanceof Error ? err.message : err}`);
+      });
 
       const result = await generateUploadUrlAction("image/webp");
       if ("error" in result) {
@@ -75,13 +77,23 @@ export function MediaGallery({
         return;
       }
 
-      const uploadResponse = await fetch(result.uploadUrl, {
-        method: "PUT",
-        body: blob,
-        headers: { "Content-Type": "image/webp" },
-      });
+      let uploadResponse: Response;
+      try {
+        uploadResponse = await fetch(result.uploadUrl, {
+          method: "PUT",
+          body: blob,
+          headers: { "Content-Type": "image/webp" },
+        });
+      } catch {
+        // Un fetch qui lève une exception (plutôt qu'une réponse non-ok)
+        // signale presque toujours un blocage CORS côté bucket R2.
+        toast.error(
+          "Envoi vers le stockage bloqué (probablement une configuration CORS manquante sur le bucket R2)."
+        );
+        return;
+      }
       if (!uploadResponse.ok) {
-        toast.error("Échec de l'envoi de l'image.");
+        toast.error(`Échec de l'envoi de l'image (statut ${uploadResponse.status}).`);
         return;
       }
 
@@ -103,8 +115,8 @@ export function MediaGallery({
         },
       ]);
       toast.success("Photo ajoutée.");
-    } catch {
-      toast.error("Impossible de traiter cette image.");
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Impossible de traiter cette image.");
     } finally {
       setIsUploading(false);
     }
