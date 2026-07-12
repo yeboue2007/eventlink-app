@@ -6,11 +6,8 @@ import { toast } from "sonner";
 import { Trash2, Upload } from "lucide-react";
 
 import { Loader } from "@/components/ui/loader";
-import {
-  confirmMediaUploadAction,
-  deleteMediaFileAction,
-} from "@/features/entreprises/actions/media.actions";
-import { generateUploadUrlAction } from "@/features/entreprises/actions/upload-media.actions";
+import { deleteMediaFileAction } from "@/features/entreprises/actions/media.actions";
+import { uploadMediaFileAction } from "@/features/entreprises/actions/upload-media.actions";
 import type { Tables } from "@/lib/supabase/database.types";
 
 const TAILLE_MAX_PX = 1920;
@@ -68,53 +65,26 @@ export function MediaGallery({
     setIsUploading(true);
     try {
       const blob = await compresserImage(file).catch((err) => {
-        throw new Error(`Compression de l'image échouée : ${err instanceof Error ? err.message : err}`);
+        throw new Error(
+          `Compression de l'image échouée : ${err instanceof Error ? err.message : err}`
+        );
       });
 
-      const result = await generateUploadUrlAction("image/webp");
-      if ("error" in result) {
+      // Upload proxifié par notre serveur (pas d'appel direct navigateur -> R2,
+      // donc aucune configuration CORS nécessaire sur le bucket).
+      const formData = new FormData();
+      formData.append("file", blob, "photo.webp");
+
+      const result = await uploadMediaFileAction(entrepriseId, formData);
+      if (result.error) {
         toast.error(result.error);
         return;
       }
 
-      let uploadResponse: Response;
-      try {
-        uploadResponse = await fetch(result.uploadUrl, {
-          method: "PUT",
-          body: blob,
-          headers: { "Content-Type": "image/webp" },
-        });
-      } catch {
-        // Un fetch qui lève une exception (plutôt qu'une réponse non-ok)
-        // signale presque toujours un blocage CORS côté bucket R2.
-        toast.error(
-          "Envoi vers le stockage bloqué (probablement une configuration CORS manquante sur le bucket R2)."
-        );
-        return;
-      }
-      if (!uploadResponse.ok) {
-        toast.error(`Échec de l'envoi de l'image (statut ${uploadResponse.status}).`);
-        return;
-      }
-
-      const confirmResult = await confirmMediaUploadAction(entrepriseId, result.publicUrl);
-      if (confirmResult?.error) {
-        toast.error(confirmResult.error);
-        return;
-      }
-
-      setMedia((current) => [
-        ...current,
-        {
-          id: crypto.randomUUID(),
-          entreprise_id: entrepriseId,
-          type: "image" as const,
-          url: result.publicUrl,
-          display_order: current.length,
-          created_at: new Date().toISOString(),
-        },
-      ]);
       toast.success("Photo ajoutée.");
+      // Le composant est revalidé côté serveur ; on force un rechargement
+      // léger de la page pour refléter la nouvelle photo immédiatement.
+      window.location.reload();
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Impossible de traiter cette image.");
     } finally {

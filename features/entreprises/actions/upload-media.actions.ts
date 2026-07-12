@@ -2,52 +2,90 @@
 
 import { randomUUID } from "node:crypto";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
-import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import { revalidatePath } from "next/cache";
 
 import { getCurrentEntreprise } from "@/features/entreprises/queries/get-current-entreprise";
+import { createClient } from "@/lib/supabase/server";
 import { getR2BucketName, getR2Client, getR2PublicUrl } from "@/lib/r2/client";
 
-const TYPES_AUTORISES = ["image/webp", "image/jpeg", "image/png"];
+const TYPES_AUTORISES = new Set(["image/webp", "image/jpeg", "image/png"]);
 
-export type GenerateUploadUrlState =
-  | { error: string }
-  | { uploadUrl: string; publicUrl: string };
+export type UploadMediaState = { error?: string; success?: boolean };
 
 /**
- * Génère une URL signée pour un upload DIRECT du navigateur vers R2 (le
- * fichier ne transite jamais par notre serveur — évite les limites de
- * payload des fonctions serverless et les frais de bande passante).
- * Le redimensionnement/compression en WebP se fait côté navigateur avant
- * l'appel (voir features/entreprises/components/media-gallery.tsx).
+ * Reçoit l'image déjà compressée (WebP, redimensionnée côté navigateur) et
+ * l'envoie elle-même vers R2 depuis le serveur, plutôt que de faire uploader
+ * le navigateur directement vers R2 via une URL présignée. Volontairement
+ * plus simple à opérer : élimine entièrement le besoin de configurer le CORS
+ * sur le bucket, seul point qui posait problème en pratique.
  */
-export async function generateUploadUrlAction(
-  contentType: string
-): Promise<GenerateUploadUrlState> {
-  if (!TYPES_AUTORISES.includes(contentType)) {
+export async function uploadMediaFileAction(
+  entrepriseId: string,
+  formData: FormData
+): Promise<UploadMediaState> {
+  const file = formData.get("file");
+  if (!(file instanceof File)) {
+    return { error: "Aucun fichier reçu." };
+  }
+  if (!TYPES_AUTORISES.has(file.type)) {
     return { error: "Format d'image non supporté." };
   }
 
   const entreprise = await getCurrentEntreprise();
-  if (!entreprise) {
-    return { error: "Aucune entreprise associée à ce compte." };
+  if (!entreprise || entreprise.id !== entrepriseId) {
+    return { error: "Non autorisé." };
   }
 
-  const extension = contentType === "image/png" ? "png" : contentType === "image/jpeg" ? "jpg" : "webp";
-  const key = `entreprises/${entreprise.id}/${randomUUID()}.${extension}`;
+  const supabase = await createClient();
+  const { count } = await supabase
+    .from("media_files")
+    .select("*", { count: "exact", head: true })
+    .eq("entreprise_id", entrepriseId);
+
+  const { data: setting } = await supabase
+    .from("platform_settings")
+    .select("value")
+    .eq("key", "max_photos_par_entreprise")
+    .maybeSingle();
+  const limite = Number(setting?.value ?? 20);
+  if ((count ?? 0) >= limite) {
+    return { error: `Limite de ${limite} photos atteinte pour votre offre actuelle.` };
+  }
+
+  const extension = file.type === "image/png" ? "png" : file.type === "image/jpeg" ? "jpg" : "webp";
+  const key = `entreprises/${entrepriseId}/${randomUUID()}.${extension}`;
 
   try {
-    const client = getR2Client();
-    const bucket = getR2BucketName();
-
-    const uploadUrl = await getSignedUrl(
-      client,
-      new PutObjectCommand({ Bucket: bucket, Key: key, ContentType: contentType }),
-      { expiresIn: 300 }
+    const buffer = Buffer.from(await file.arrayBuffer());
+    await getR2Client().send(
+      new PutObjectCommand({
+        Bucket: getR2BucketName(),
+        Key: key,
+        Body: buffer,
+        ContentType: file.type,
+      })
     );
 
-    return { uploadUrl, publicUrl: getR2PublicUrl(key) };
+    const publicUrl = getR2PublicUrl(key);
+
+    const { error } = await supabase.from("media_files").insert({
+      entreprise_id: entrepriseId,
+      type: "image",
+      url: publicUrl,
+      display_order: count ?? 0,
+    });
+
+    if (error) {
+      console.error("[uploadMediaFileAction] échec de l'enregistrement en base :", error);
+      return { error: "Photo envoyée mais impossible à enregistrer. Réessayez." };
+    }
+
+    return { success: true };
   } catch (error) {
-    console.error("[generateUploadUrlAction] échec de génération de l'URL R2 :", error);
-    return { error: "Stockage média non configuré. Contactez l'administrateur." };
+    console.error("[uploadMediaFileAction] échec de l'envoi vers R2 :", error);
+    return { error: "Stockage média non configuré. Vérifiez les identifiants R2." };
+  } finally {
+    revalidatePath("/prestataire/parametres/profil");
+    revalidatePath(`/entreprises/${entrepriseId}`);
   }
 }
