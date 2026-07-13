@@ -1,5 +1,7 @@
 import "server-only";
 
+import { env } from "@/lib/env";
+
 const GEMINI_MODEL = "gemini-flash-latest";
 const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`;
 
@@ -9,7 +11,7 @@ const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/${GE
  * plutôt qu'un SDK, pour une seule fonctionnalité aussi ponctuelle.
  */
 export async function demanderCompletion(prompt: string, maxTokens = 400): Promise<string> {
-  const apiKey = process.env.GEMINI_API_KEY;
+  const apiKey = env("GEMINI_API_KEY");
   if (!apiKey) throw new Error("GEMINI_API_KEY manquante.");
 
   const response = await fetch(`${GEMINI_URL}?key=${apiKey}`, {

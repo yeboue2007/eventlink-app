@@ -1,10 +1,12 @@
 import "server-only";
 
+import { env } from "@/lib/env";
+
 const CINETPAY_BASE_URL = "https://api-checkout.cinetpay.com/v2";
 
 function getCredentials() {
-  const apikey = process.env.CINETPAY_API_KEY;
-  const siteId = process.env.CINETPAY_SITE_ID;
+  const apikey = env("CINETPAY_API_KEY");
+  const siteId = env("CINETPAY_SITE_ID");
   if (!apikey || !siteId) {
     throw new Error("CINETPAY_API_KEY / CINETPAY_SITE_ID manquantes.");
   }
@@ -31,7 +33,7 @@ export async function initCinetpayPayment(params: {
   returnPath: string;
 }): Promise<CinetpayInitResult> {
   const { apikey, siteId } = getCredentials();
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "";
+  const siteUrl = env("NEXT_PUBLIC_SITE_URL") ?? "";
 
   const response = await fetch(`${CINETPAY_BASE_URL}/payment`, {
     method: "POST",

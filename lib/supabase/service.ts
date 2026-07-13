@@ -2,6 +2,7 @@ import "server-only";
 import { createClient as createSupabaseClient } from "@supabase/supabase-js";
 
 import type { Database } from "@/lib/supabase/database.types";
+import { env } from "@/lib/env";
 
 /**
  * Client à privilèges élevés (clé de service), contourne entièrement la RLS.
@@ -12,8 +13,8 @@ import type { Database } from "@/lib/supabase/database.types";
  * pas de session Supabase à faire respecter par la RLS.
  */
 export function createServiceRoleClient() {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  const url = env("NEXT_PUBLIC_SUPABASE_URL");
+  const serviceKey = env("SUPABASE_SERVICE_ROLE_KEY");
 
   if (!url || !serviceKey) {
     throw new Error(

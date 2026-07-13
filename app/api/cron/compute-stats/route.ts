@@ -1,5 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server";
 
+import { env } from "@/lib/env";
 import { createServiceRoleClient } from "@/lib/supabase/service";
 
 /**
@@ -9,7 +10,7 @@ import { createServiceRoleClient } from "@/lib/supabase/service";
  */
 export async function GET(request: NextRequest) {
   const authHeader = request.headers.get("authorization");
-  if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+  if (authHeader !== `Bearer ${env("CRON_SECRET")}`) {
     return NextResponse.json({ error: "Non autorisé" }, { status: 401 });
   }
 
