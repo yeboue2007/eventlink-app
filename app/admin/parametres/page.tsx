@@ -8,8 +8,10 @@ import {
 import { CreateSettingForm } from "@/features/administration/platform-settings/components/create-setting-form";
 import { EditSettingForm } from "@/features/administration/platform-settings/components/edit-setting-form";
 import { listAllPlatformSettings } from "@/features/administration/platform-settings/queries/list-platform-settings";
+import { requireAdminAccess } from "@/features/administration/permissions/guard";
 
 export default async function AdminParametresPage() {
+  await requireAdminAccess("parametres_generaux", "gestion");
   const settings = await listAllPlatformSettings();
 
   return (

@@ -1085,6 +1085,7 @@ export type Database = {
       }
       profiles: {
         Row: {
+          admin_role: Database["public"]["Enums"]["admin_role"] | null
           avatar_url: string | null
           company_name: string | null
           created_at: string
@@ -1097,6 +1098,7 @@ export type Database = {
           ville: string | null
         }
         Insert: {
+          admin_role?: Database["public"]["Enums"]["admin_role"] | null
           avatar_url?: string | null
           company_name?: string | null
           created_at?: string
@@ -1109,6 +1111,7 @@ export type Database = {
           ville?: string | null
         }
         Update: {
+          admin_role?: Database["public"]["Enums"]["admin_role"] | null
           avatar_url?: string | null
           company_name?: string | null
           created_at?: string
@@ -1663,6 +1666,7 @@ export type Database = {
       }
     }
     Enums: {
+      admin_role: "super_admin" | "admin" | "support_client" | "moderateur" | "comptabilite"
       availability_status:
         | "disponible"
         | "occupe"

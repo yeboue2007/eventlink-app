@@ -5,12 +5,14 @@ import {
   getTotauxPlateforme,
   listDailyStats,
 } from "@/features/administration/statistiques/queries/list-stats";
+import { requireAdminAccess } from "@/features/administration/permissions/guard";
 
 function formatFcfa(value: number) {
   return new Intl.NumberFormat("fr-FR").format(value) + " FCFA";
 }
 
 export default async function AdminStatistiquesPage() {
+  await requireAdminAccess("statistiques", "lecture");
   const [totaux, dailyStats] = await Promise.all([getTotauxPlateforme(), listDailyStats(30)]);
 
   const revenuTotal30j = dailyStats.reduce((sum, d) => sum + d.revenus_fcfa, 0);

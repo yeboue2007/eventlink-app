@@ -11,12 +11,14 @@ import {
 import { CreateSubscriptionPlanForm } from "@/features/administration/subscription-plans/components/create-subscription-plan-form";
 import { ToggleSubscriptionPlanActiveButton } from "@/features/administration/subscription-plans/components/toggle-subscription-plan-active-button";
 import { listAllSubscriptionPlansAdmin } from "@/features/administration/subscription-plans/queries/list-subscription-plans-admin";
+import { requireAdminAccess } from "@/features/administration/permissions/guard";
 
 function formatFcfa(value: number) {
   return new Intl.NumberFormat("fr-FR").format(value) + " FCFA";
 }
 
 export default async function AdminSubscriptionPlansPage() {
+  await requireAdminAccess("abonnements", "gestion");
   const plans = await listAllSubscriptionPlansAdmin();
 
   return (

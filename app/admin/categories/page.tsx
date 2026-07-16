@@ -11,8 +11,10 @@ import {
 import { CreateCategoryForm } from "@/features/administration/categories/components/create-category-form";
 import { ToggleCategoryActiveButton } from "@/features/administration/categories/components/toggle-category-active-button";
 import { listAllCategoriesAdmin } from "@/features/administration/categories/queries/list-categories-admin";
+import { requireAdminAccess } from "@/features/administration/permissions/guard";
 
 export default async function AdminCategoriesPage() {
+  await requireAdminAccess("categories", "gestion");
   const categories = await listAllCategoriesAdmin();
   const racines = categories.filter((c) => c.parent_id === null);
 

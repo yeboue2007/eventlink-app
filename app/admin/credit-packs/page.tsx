@@ -11,12 +11,14 @@ import {
 import { CreateCreditPackForm } from "@/features/administration/credit-packs/components/create-credit-pack-form";
 import { ToggleCreditPackActiveButton } from "@/features/administration/credit-packs/components/toggle-credit-pack-active-button";
 import { listAllCreditPacksAdmin } from "@/features/administration/credit-packs/queries/list-credit-packs-admin";
+import { requireAdminAccess } from "@/features/administration/permissions/guard";
 
 function formatFcfa(value: number) {
   return new Intl.NumberFormat("fr-FR").format(value) + " FCFA";
 }
 
 export default async function AdminCreditPacksPage() {
+  await requireAdminAccess("credits", "gestion");
   const packs = await listAllCreditPacksAdmin();
 
   return (

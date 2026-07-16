@@ -1,19 +1,41 @@
-import { BarChart3, CreditCard, LayoutDashboard, Settings, Tags } from "lucide-react";
+import { BarChart3, CreditCard, LayoutDashboard, Settings, Tags, Users } from "lucide-react";
 import { redirect } from "next/navigation";
 
 import { AppNavbar } from "@/components/layout/app-navbar";
 import { Sidebar, type SidebarNavItem } from "@/components/layout/sidebar";
 import { getCurrentProfile } from "@/features/auth/queries/get-current-profile";
 import { listRecentNotifications } from "@/features/notifications/queries/list-notifications";
+import { peutAcceder, type ModuleAdmin } from "@/features/administration/permissions/permissions";
 
-// Complété au fil des phases suivantes (promotions, utilisateurs...).
-const NAV_ITEMS: SidebarNavItem[] = [
-  { label: "Tableau de bord", href: "/admin", icon: <LayoutDashboard className="size-4" /> },
-  { label: "Statistiques", href: "/admin/statistiques", icon: <BarChart3 className="size-4" /> },
-  { label: "Catégories", href: "/admin/categories", icon: <Tags className="size-4" /> },
-  { label: "Packs de crédits", href: "/admin/credit-packs", icon: <CreditCard className="size-4" /> },
-  { label: "Abonnements", href: "/admin/subscription-plans", icon: <CreditCard className="size-4" /> },
-  { label: "Paramètres généraux", href: "/admin/parametres", icon: <Settings className="size-4" /> },
+const TOUS_LES_LIENS: { module: ModuleAdmin; item: SidebarNavItem }[] = [
+  {
+    module: "tableau_de_bord",
+    item: { label: "Tableau de bord", href: "/admin", icon: <LayoutDashboard className="size-4" /> },
+  },
+  {
+    module: "statistiques",
+    item: { label: "Statistiques", href: "/admin/statistiques", icon: <BarChart3 className="size-4" /> },
+  },
+  {
+    module: "categories",
+    item: { label: "Catégories", href: "/admin/categories", icon: <Tags className="size-4" /> },
+  },
+  {
+    module: "credits",
+    item: { label: "Packs de crédits", href: "/admin/credit-packs", icon: <CreditCard className="size-4" /> },
+  },
+  {
+    module: "abonnements",
+    item: { label: "Abonnements", href: "/admin/subscription-plans", icon: <CreditCard className="size-4" /> },
+  },
+  {
+    module: "parametres_generaux",
+    item: { label: "Paramètres généraux", href: "/admin/parametres", icon: <Settings className="size-4" /> },
+  },
+  {
+    module: "equipe",
+    item: { label: "Équipe & permissions", href: "/admin/equipe", icon: <Users className="size-4" /> },
+  },
 ];
 
 export default async function AdminLayout({
@@ -26,6 +48,13 @@ export default async function AdminLayout({
   if (!current) redirect("/connexion");
   if (current.profile.role !== "admin") redirect("/tableau-de-bord");
 
+  // Fail-safe : un admin sans admin_role assigné (ne devrait pas arriver en
+  // pratique, le trigger d'inscription ne crée jamais ce rôle) ne voit rien.
+  const adminRole = current.profile.admin_role;
+  const navItems = adminRole
+    ? TOUS_LES_LIENS.filter(({ module }) => peutAcceder(adminRole, module)).map((l) => l.item)
+    : [];
+
   const notifications = await listRecentNotifications();
 
   return (
@@ -36,7 +65,7 @@ export default async function AdminLayout({
         initialNotifications={notifications}
       />
       <div className="mx-auto flex w-full max-w-6xl flex-1">
-        <Sidebar items={NAV_ITEMS} />
+        <Sidebar items={navItems} />
         <main className="flex-1 px-6 py-8">{children}</main>
       </div>
     </div>
