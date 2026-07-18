@@ -558,6 +558,7 @@ export type Database = {
           nom: string
           reliability_score: number | null
           response_rate: number | null
+          statut: Database["public"]["Enums"]["compte_statut"]
           type: Database["public"]["Enums"]["entreprise_type"]
           updated_at: string
           verification_level: Database["public"]["Enums"]["verification_level"]
@@ -576,6 +577,7 @@ export type Database = {
           nom: string
           reliability_score?: number | null
           response_rate?: number | null
+          statut?: Database["public"]["Enums"]["compte_statut"]
           type?: Database["public"]["Enums"]["entreprise_type"]
           updated_at?: string
           verification_level?: Database["public"]["Enums"]["verification_level"]
@@ -594,6 +596,7 @@ export type Database = {
           nom?: string
           reliability_score?: number | null
           response_rate?: number | null
+          statut?: Database["public"]["Enums"]["compte_statut"]
           type?: Database["public"]["Enums"]["entreprise_type"]
           updated_at?: string
           verification_level?: Database["public"]["Enums"]["verification_level"]
@@ -1094,6 +1097,7 @@ export type Database = {
           phone: string
           phone_verified: boolean
           role: Database["public"]["Enums"]["user_role"]
+          statut: Database["public"]["Enums"]["compte_statut"]
           updated_at: string
           ville: string | null
         }
@@ -1107,6 +1111,7 @@ export type Database = {
           phone: string
           phone_verified?: boolean
           role?: Database["public"]["Enums"]["user_role"]
+          statut?: Database["public"]["Enums"]["compte_statut"]
           updated_at?: string
           ville?: string | null
         }
@@ -1120,6 +1125,7 @@ export type Database = {
           phone?: string
           phone_verified?: boolean
           role?: Database["public"]["Enums"]["user_role"]
+          statut?: Database["public"]["Enums"]["compte_statut"]
           updated_at?: string
           ville?: string | null
         }
@@ -1667,6 +1673,7 @@ export type Database = {
     }
     Enums: {
       admin_role: "super_admin" | "admin" | "support_client" | "moderateur" | "comptabilite"
+      compte_statut: "actif" | "suspendu" | "desactive" | "en_attente"
       availability_status:
         | "disponible"
         | "occupe"
