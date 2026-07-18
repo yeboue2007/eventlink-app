@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { BarChart3, CreditCard, Settings, Tags, Users, Briefcase } from "lucide-react";
+import { BarChart3, CreditCard, Settings, Tags, Users, Briefcase, UserCircle } from "lucide-react";
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { getCurrentProfile } from "@/features/auth/queries/get-current-profile";
@@ -19,6 +19,13 @@ const RACCOURCIS: { href: string; icon: typeof BarChart3; titre: string; descrip
     titre: "Prestataires",
     description: "Recherche, filtres, vérification, statut de compte.",
     module: "prestataires",
+  },
+  {
+    href: "/admin/clients",
+    icon: UserCircle,
+    titre: "Clients",
+    description: "Recherche, statut de compte, historique des demandes.",
+    module: "clients",
   },
   {
     href: "/admin/categories",
