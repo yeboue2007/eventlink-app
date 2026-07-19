@@ -1609,6 +1609,15 @@ export type Database = {
         }
         Returns: string
       }
+      rpc_ajuster_credits_admin: {
+        Args: {
+          p_entreprise_id: string
+          p_montant: number
+          p_type: Database["public"]["Enums"]["credit_txn_type"]
+          p_justification: string
+        }
+        Returns: undefined
+      }
       rpc_calculer_stats_du_jour: {
         Args: { p_date?: string }
         Returns: undefined

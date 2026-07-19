@@ -8,10 +8,30 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { AjusterCreditsDialog } from "@/features/administration/credits/components/ajuster-credits-dialog";
 import { requireAdminAccess } from "@/features/administration/permissions/guard";
 import { getPrestataireAdminDetail } from "@/features/administration/prestataires/queries/get-prestataire-admin-detail";
 import { StatutCompteSelect } from "@/features/administration/prestataires/components/statut-compte-select";
 import { VerificationSelect } from "@/features/administration/prestataires/components/verification-select";
+import { listWalletTransactions } from "@/features/credits/queries/list-credit-packs";
+
+const LABEL_TYPE_TRANSACTION: Record<string, string> = {
+  achat: "Achat de pack",
+  depense: "Réponse à une demande",
+  bonus_gratuit: "Bonus offert (admin)",
+  remboursement: "Remboursement (admin)",
+  promotion: "Promotion (admin)",
+  correction_manuelle: "Correction manuelle (admin)",
+  annulation: "Annulation (admin)",
+};
 
 export default async function AdminPrestataireDetailPage({
   params,
@@ -31,6 +51,7 @@ export default async function AdminPrestataireDetailPage({
 
   const categories = entreprise.prestataire_categories.map((pc) => pc.categories?.label).filter(Boolean);
   const abonnementActif = entreprise.prestataire_subscriptions.find((s) => s.status === "active");
+  const transactions = await listWalletTransactions(entreprise.id);
 
   return (
     <div className="space-y-6">
@@ -71,13 +92,40 @@ export default async function AdminPrestataireDetailPage({
       </div>
 
       <Card>
-        <CardHeader>
+        <CardHeader className="flex-row items-center justify-between space-y-0">
           <CardTitle>Solde de crédits</CardTitle>
+          {peutGerer && <AjusterCreditsDialog entrepriseId={entreprise.id} />}
         </CardHeader>
-        <CardContent>
+        <CardContent className="space-y-4">
           <p className="text-2xl font-semibold text-el-violet">
             {entreprise.wallets?.balance ?? 0}
           </p>
+
+          {transactions.length > 0 && (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Date</TableHead>
+                  <TableHead>Type</TableHead>
+                  <TableHead>Montant</TableHead>
+                  <TableHead>Solde après</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {transactions.slice(0, 10).map((txn) => (
+                  <TableRow key={txn.id}>
+                    <TableCell>{new Date(txn.created_at).toLocaleDateString("fr-FR")}</TableCell>
+                    <TableCell>{LABEL_TYPE_TRANSACTION[txn.type] ?? txn.type}</TableCell>
+                    <TableCell className={txn.amount >= 0 ? "text-success" : "text-destructive"}>
+                      {txn.amount >= 0 ? "+" : ""}
+                      {txn.amount}
+                    </TableCell>
+                    <TableCell>{txn.balance_after}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          )}
         </CardContent>
       </Card>
 
