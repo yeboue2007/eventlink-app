@@ -1195,6 +1195,8 @@ export type Database = {
           start_date: string
           target_category_id: number | null
           target_min_seniority_days: number | null
+          target_plan_id: string | null
+          target_role: Database["public"]["Enums"]["user_role"] | null
           target_ville: string | null
         }
         Insert: {
@@ -1210,6 +1212,8 @@ export type Database = {
           start_date: string
           target_category_id?: number | null
           target_min_seniority_days?: number | null
+          target_plan_id?: string | null
+          target_role?: Database["public"]["Enums"]["user_role"] | null
           target_ville?: string | null
         }
         Update: {
@@ -1225,6 +1229,8 @@ export type Database = {
           start_date?: string
           target_category_id?: number | null
           target_min_seniority_days?: number | null
+          target_plan_id?: string | null
+          target_role?: Database["public"]["Enums"]["user_role"] | null
           target_ville?: string | null
         }
         Relationships: [
@@ -1233,6 +1239,13 @@ export type Database = {
             columns: ["target_category_id"]
             isOneToOne: false
             referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "promotions_target_plan_id_fkey"
+            columns: ["target_plan_id"]
+            isOneToOne: false
+            referencedRelation: "subscription_plans"
             referencedColumns: ["id"]
           },
         ]

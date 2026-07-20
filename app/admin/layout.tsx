@@ -1,4 +1,4 @@
-import { BarChart3, CreditCard, LayoutDashboard, Settings, Tags, Users, Briefcase, UserCircle, History } from "lucide-react";
+import { BarChart3, CreditCard, LayoutDashboard, Settings, Tags, Users, Briefcase, UserCircle, History, Percent } from "lucide-react";
 import { redirect } from "next/navigation";
 
 import { AppNavbar } from "@/components/layout/app-navbar";
@@ -35,6 +35,10 @@ const TOUS_LES_LIENS: { module: ModuleAdmin; item: SidebarNavItem }[] = [
   {
     module: "abonnements",
     item: { label: "Abonnements", href: "/admin/subscription-plans", icon: <CreditCard className="size-4" /> },
+  },
+  {
+    module: "promotions",
+    item: { label: "Promotions", href: "/admin/promotions", icon: <Percent className="size-4" /> },
   },
   {
     module: "parametres_generaux",
