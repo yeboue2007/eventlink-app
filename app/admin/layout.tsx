@@ -1,4 +1,4 @@
-import { BarChart3, CreditCard, LayoutDashboard, Settings, Tags, Users, Briefcase, UserCircle, History, Percent, Megaphone } from "lucide-react";
+import { BarChart3, CreditCard, LayoutDashboard, Settings, Tags, Users, Briefcase, UserCircle, History, Percent, Megaphone, Trash2 } from "lucide-react";
 import { redirect } from "next/navigation";
 
 import { AppNavbar } from "@/components/layout/app-navbar";
@@ -59,6 +59,10 @@ const TOUS_LES_LIENS: { module: ModuleAdmin; item: SidebarNavItem }[] = [
   {
     module: "audit",
     item: { label: "Historique des actions", href: "/admin/audit", icon: <History className="size-4" /> },
+  },
+  {
+    module: "corbeille",
+    item: { label: "Corbeille", href: "/admin/corbeille", icon: <Trash2 className="size-4" /> },
   },
 ];
 
