@@ -23,7 +23,16 @@ export async function verifyAndFinalizeCinetpayTransaction(
     const { error } = await supabase.rpc("rpc_confirmer_achat_credits", {
       p_cinetpay_transaction_id: transactionId,
     });
-    return error ? "erreur" : "credite";
+    if (error) {
+      await supabase.from("system_log").insert({
+        event_type: "erreur",
+        severity: "error",
+        message: "Échec de confirmation d'un achat de crédits",
+        metadata: { transaction_id: transactionId, erreur: error.message },
+      });
+      return "erreur";
+    }
+    return "credite";
   }
 
   if (status === "REFUSED") {

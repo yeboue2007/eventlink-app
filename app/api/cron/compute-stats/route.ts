@@ -26,8 +26,25 @@ export async function GET(request: NextRequest) {
   });
 
   if (errorHier || errorAujourdhui) {
+    await supabase.from("system_log").insert({
+      event_type: "job_cron",
+      severity: "error",
+      message: "Échec du calcul quotidien des statistiques",
+      metadata: {
+        dates: [hier, aujourdhui],
+        erreur_hier: errorHier?.message ?? null,
+        erreur_aujourdhui: errorAujourdhui?.message ?? null,
+      },
+    });
     return NextResponse.json({ error: "Échec du calcul des statistiques" }, { status: 500 });
   }
+
+  await supabase.from("system_log").insert({
+    event_type: "job_cron",
+    severity: "info",
+    message: "Calcul quotidien des statistiques terminé",
+    metadata: { dates: [hier, aujourdhui] },
+  });
 
   return NextResponse.json({ success: true, dates: [hier, aujourdhui] });
 }

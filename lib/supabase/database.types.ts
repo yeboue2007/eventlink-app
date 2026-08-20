@@ -180,45 +180,6 @@ export type Database = {
           },
         ]
       }
-      credit_purchase_orders: {
-        Row: {
-          id: string
-          entreprise_id: string
-          wallet_id: string
-          credit_pack_id: string
-          montant_fcfa: number
-          credits_amount: number
-          cinetpay_transaction_id: string
-          status: Database["public"]["Enums"]["purchase_order_status"]
-          created_at: string
-          updated_at: string
-        }
-        Insert: {
-          id?: string
-          entreprise_id: string
-          wallet_id: string
-          credit_pack_id: string
-          montant_fcfa: number
-          credits_amount: number
-          cinetpay_transaction_id: string
-          status?: Database["public"]["Enums"]["purchase_order_status"]
-          created_at?: string
-          updated_at?: string
-        }
-        Update: {
-          id?: string
-          entreprise_id?: string
-          wallet_id?: string
-          credit_pack_id?: string
-          montant_fcfa?: number
-          credits_amount?: number
-          cinetpay_transaction_id?: string
-          status?: Database["public"]["Enums"]["purchase_order_status"]
-          created_at?: string
-          updated_at?: string
-        }
-        Relationships: []
-      }
       credit_costs: {
         Row: {
           active: boolean
@@ -292,6 +253,74 @@ export type Database = {
           valid_to?: string | null
         }
         Relationships: []
+      }
+      credit_purchase_orders: {
+        Row: {
+          cinetpay_transaction_id: string
+          created_at: string
+          credit_pack_id: string
+          credits_amount: number
+          entreprise_id: string
+          id: string
+          montant_fcfa: number
+          status: Database["public"]["Enums"]["purchase_order_status"]
+          updated_at: string
+          wallet_id: string
+        }
+        Insert: {
+          cinetpay_transaction_id: string
+          created_at?: string
+          credit_pack_id: string
+          credits_amount: number
+          entreprise_id: string
+          id?: string
+          montant_fcfa: number
+          status?: Database["public"]["Enums"]["purchase_order_status"]
+          updated_at?: string
+          wallet_id: string
+        }
+        Update: {
+          cinetpay_transaction_id?: string
+          created_at?: string
+          credit_pack_id?: string
+          credits_amount?: number
+          entreprise_id?: string
+          id?: string
+          montant_fcfa?: number
+          status?: Database["public"]["Enums"]["purchase_order_status"]
+          updated_at?: string
+          wallet_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "credit_purchase_orders_credit_pack_id_fkey"
+            columns: ["credit_pack_id"]
+            isOneToOne: false
+            referencedRelation: "credit_packs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "credit_purchase_orders_entreprise_id_fkey"
+            columns: ["entreprise_id"]
+            isOneToOne: false
+            referencedRelation: "entreprises"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "credit_purchase_orders_entreprise_id_fkey"
+            columns: ["entreprise_id"]
+            isOneToOne: false
+            referencedRelation: "v_reliability_score"
+            referencedColumns: ["entreprise_id"]
+          },
+          {
+            foreignKeyName: "credit_purchase_orders_wallet_id_fkey"
+            columns: ["wallet_id"]
+            isOneToOne: false
+            referencedRelation: "wallets"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       credit_transactions: {
         Row: {
@@ -1417,39 +1446,6 @@ export type Database = {
           },
         ]
       }
-      subscription_purchase_orders: {
-        Row: {
-          id: string
-          entreprise_id: string
-          plan_id: string
-          montant_fcfa: number
-          cinetpay_transaction_id: string
-          status: Database["public"]["Enums"]["purchase_order_status"]
-          created_at: string
-          updated_at: string
-        }
-        Insert: {
-          id?: string
-          entreprise_id: string
-          plan_id: string
-          montant_fcfa: number
-          cinetpay_transaction_id: string
-          status?: Database["public"]["Enums"]["purchase_order_status"]
-          created_at?: string
-          updated_at?: string
-        }
-        Update: {
-          id?: string
-          entreprise_id?: string
-          plan_id?: string
-          montant_fcfa?: number
-          cinetpay_transaction_id?: string
-          status?: Database["public"]["Enums"]["purchase_order_status"]
-          created_at?: string
-          updated_at?: string
-        }
-        Relationships: []
-      }
       subscription_plans: {
         Row: {
           active: boolean
@@ -1482,6 +1478,116 @@ export type Database = {
           slug?: string
         }
         Relationships: []
+      }
+      subscription_purchase_orders: {
+        Row: {
+          cinetpay_transaction_id: string
+          created_at: string
+          entreprise_id: string
+          id: string
+          montant_fcfa: number
+          plan_id: string
+          status: Database["public"]["Enums"]["purchase_order_status"]
+          updated_at: string
+        }
+        Insert: {
+          cinetpay_transaction_id: string
+          created_at?: string
+          entreprise_id: string
+          id?: string
+          montant_fcfa: number
+          plan_id: string
+          status?: Database["public"]["Enums"]["purchase_order_status"]
+          updated_at?: string
+        }
+        Update: {
+          cinetpay_transaction_id?: string
+          created_at?: string
+          entreprise_id?: string
+          id?: string
+          montant_fcfa?: number
+          plan_id?: string
+          status?: Database["public"]["Enums"]["purchase_order_status"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "subscription_purchase_orders_entreprise_id_fkey"
+            columns: ["entreprise_id"]
+            isOneToOne: false
+            referencedRelation: "entreprises"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "subscription_purchase_orders_entreprise_id_fkey"
+            columns: ["entreprise_id"]
+            isOneToOne: false
+            referencedRelation: "v_reliability_score"
+            referencedColumns: ["entreprise_id"]
+          },
+          {
+            foreignKeyName: "subscription_purchase_orders_plan_id_fkey"
+            columns: ["plan_id"]
+            isOneToOne: false
+            referencedRelation: "subscription_plans"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      system_log: {
+        Row: {
+          created_at: string
+          entreprise_id: string | null
+          event_type: string
+          id: string
+          message: string | null
+          metadata: Json | null
+          profile_id: string | null
+          severity: string
+        }
+        Insert: {
+          created_at?: string
+          entreprise_id?: string | null
+          event_type: string
+          id?: string
+          message?: string | null
+          metadata?: Json | null
+          profile_id?: string | null
+          severity?: string
+        }
+        Update: {
+          created_at?: string
+          entreprise_id?: string | null
+          event_type?: string
+          id?: string
+          message?: string | null
+          metadata?: Json | null
+          profile_id?: string | null
+          severity?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "system_log_entreprise_id_fkey"
+            columns: ["entreprise_id"]
+            isOneToOne: false
+            referencedRelation: "entreprises"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "system_log_entreprise_id_fkey"
+            columns: ["entreprise_id"]
+            isOneToOne: false
+            referencedRelation: "v_reliability_score"
+            referencedColumns: ["entreprise_id"]
+          },
+          {
+            foreignKeyName: "system_log_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       verification_requests: {
         Row: {
@@ -1582,29 +1688,123 @@ export type Database = {
       }
     }
     Views: {
+      geography_columns: {
+        Row: {
+          coord_dimension: number | null
+          f_geography_column: unknown
+          f_table_catalog: unknown
+          f_table_name: unknown
+          f_table_schema: unknown
+          srid: number | null
+          type: string | null
+        }
+        Relationships: []
+      }
+      geometry_columns: {
+        Row: {
+          coord_dimension: number | null
+          f_geometry_column: unknown
+          f_table_catalog: string | null
+          f_table_name: unknown
+          f_table_schema: unknown
+          srid: number | null
+          type: string | null
+        }
+        Insert: {
+          coord_dimension?: number | null
+          f_geometry_column?: unknown
+          f_table_catalog?: string | null
+          f_table_name?: unknown
+          f_table_schema?: unknown
+          srid?: number | null
+          type?: string | null
+        }
+        Update: {
+          coord_dimension?: number | null
+          f_geometry_column?: unknown
+          f_table_catalog?: string | null
+          f_table_name?: unknown
+          f_table_schema?: unknown
+          srid?: number | null
+          type?: string | null
+        }
+        Relationships: []
+      }
       v_entreprise_rating: {
         Row: {
           entreprise_id: string | null
-          note_moyenne: number | null
           nb_avis: number | null
+          note_moyenne: number | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "reviews_entreprise_id_fkey"
+            columns: ["entreprise_id"]
+            isOneToOne: false
+            referencedRelation: "entreprises"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reviews_entreprise_id_fkey"
+            columns: ["entreprise_id"]
+            isOneToOne: false
+            referencedRelation: "v_reliability_score"
+            referencedColumns: ["entreprise_id"]
+          },
+        ]
       }
       v_reliability_score: {
         Row: {
           entreprise_id: string | null
           score_sur_100: number | null
         }
+        Insert: {
+          entreprise_id?: string | null
+          score_sur_100?: never
+        }
+        Update: {
+          entreprise_id?: string | null
+          score_sur_100?: never
+        }
         Relationships: []
       }
     }
     Functions: {
-      is_admin: { Args: Record<string, never>; Returns: boolean }
+      is_admin: { Args: never; Returns: boolean }
       is_entreprise_admin: { Args: { ent_id: string }; Returns: boolean }
       is_entreprise_member: { Args: { ent_id: string }; Returns: boolean }
       prestataire_matches_demande: {
-        Args: { p_demande_id: string; p_prestataire_id: string }
+        Args: { p_demande_id: string; p_entreprise_id: string }
         Returns: boolean
+      }
+      rpc_ajuster_credits_admin: {
+        Args: {
+          p_entreprise_id: string
+          p_justification: string
+          p_montant: number
+          p_type: Database["public"]["Enums"]["credit_txn_type"]
+        }
+        Returns: undefined
+      }
+      rpc_calculer_stats_du_jour: {
+        Args: { p_date?: string }
+        Returns: undefined
+      }
+      rpc_confirmer_achat_abonnement: {
+        Args: { p_cinetpay_transaction_id: string }
+        Returns: undefined
+      }
+      rpc_confirmer_achat_credits: {
+        Args: { p_cinetpay_transaction_id: string }
+        Returns: undefined
+      }
+      rpc_creer_commande_abonnement: {
+        Args: { p_cinetpay_transaction_id: string; p_plan_id: string }
+        Returns: string
+      }
+      rpc_creer_commande_credits: {
+        Args: { p_cinetpay_transaction_id: string; p_credit_pack_id: string }
+        Returns: string
       }
       rpc_creer_demande: {
         Args: {
@@ -1621,58 +1821,6 @@ export type Database = {
           p_ville: string
         }
         Returns: string
-      }
-      rpc_ajuster_credits_admin: {
-        Args: {
-          p_entreprise_id: string
-          p_montant: number
-          p_type: Database["public"]["Enums"]["credit_txn_type"]
-          p_justification: string
-        }
-        Returns: undefined
-      }
-      rpc_calculer_stats_du_jour: {
-        Args: { p_date?: string }
-        Returns: undefined
-      }
-      rpc_recalculer_stats_admin: {
-        Args: { p_date?: string }
-        Returns: undefined
-      }
-      rpc_definir_categories_prestataire: {
-        Args: { p_entreprise_id: string; p_category_ids: number[] }
-        Returns: undefined
-      }
-      rpc_creer_commande_abonnement: {
-        Args: { p_plan_id: string; p_cinetpay_transaction_id: string }
-        Returns: string
-      }
-      rpc_confirmer_achat_abonnement: {
-        Args: { p_cinetpay_transaction_id: string }
-        Returns: undefined
-      }
-      rpc_echouer_achat_abonnement: {
-        Args: { p_cinetpay_transaction_id: string }
-        Returns: undefined
-      }
-      rpc_creer_commande_credits: {
-        Args: { p_credit_pack_id: string; p_cinetpay_transaction_id: string }
-        Returns: string
-      }
-      rpc_confirmer_achat_credits: {
-        Args: { p_cinetpay_transaction_id: string }
-        Returns: undefined
-      }
-      rpc_echouer_achat_credits: {
-        Args: { p_cinetpay_transaction_id: string }
-        Returns: undefined
-      }
-      rpc_repondre_offre: {
-        Args: {
-          p_decision: Database["public"]["Enums"]["offre_status"]
-          p_offre_id: string
-        }
-        Returns: undefined
       }
       rpc_creer_entreprise: {
         Args: {
@@ -1692,16 +1840,44 @@ export type Database = {
         }
         Returns: string
       }
+      rpc_definir_categories_prestataire: {
+        Args: { p_category_ids: number[]; p_entreprise_id: string }
+        Returns: undefined
+      }
+      rpc_echouer_achat_abonnement: {
+        Args: { p_cinetpay_transaction_id: string }
+        Returns: undefined
+      }
+      rpc_echouer_achat_credits: {
+        Args: { p_cinetpay_transaction_id: string }
+        Returns: undefined
+      }
+      rpc_recalculer_stats_admin: {
+        Args: { p_date?: string }
+        Returns: undefined
+      }
+      rpc_repondre_offre: {
+        Args: {
+          p_decision: Database["public"]["Enums"]["offre_status"]
+          p_offre_id: string
+        }
+        Returns: undefined
+      }
     }
     Enums: {
-      admin_role: "super_admin" | "admin" | "support_client" | "moderateur" | "comptabilite"
-      compte_statut: "actif" | "suspendu" | "desactive" | "en_attente"
+      admin_role:
+        | "super_admin"
+        | "admin"
+        | "support_client"
+        | "moderateur"
+        | "comptabilite"
       availability_status:
         | "disponible"
         | "occupe"
         | "conge"
         | "indisponible"
         | "maintenance"
+      compte_statut: "actif" | "suspendu" | "desactive" | "en_attente"
       credit_txn_type:
         | "achat"
         | "depense"
@@ -1724,32 +1900,192 @@ export type Database = {
         | "systeme"
       notification_channel: "realtime" | "email" | "push"
       offre_status: "envoyee" | "vue" | "acceptee" | "refusee" | "retiree"
-      purchase_order_status: "en_attente" | "reussi" | "echoue" | "annule"
       projet_status: "actif" | "termine" | "annule"
+      purchase_order_status: "en_attente" | "reussi" | "echoue" | "annule"
       subscription_status: "active" | "expiree" | "annulee" | "suspendue"
       user_role: "client" | "prestataire" | "admin"
       verification_level: "niveau_1" | "niveau_2" | "niveau_3"
       verification_request_status: "en_attente" | "approuvee" | "rejetee"
     }
-    CompositeTypes: Record<string, never>
+    CompositeTypes: {
+      geometry_dump: {
+        path: number[] | null
+        geom: unknown
+      }
+      valid_detail: {
+        valid: boolean | null
+        reason: string | null
+        location: unknown
+      }
+    }
   }
 }
 
-type DefaultSchema = Database["public"]
+type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">
+
+type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, "public">]
 
 export type Tables<
-  Name extends keyof (DefaultSchema["Tables"] & DefaultSchema["Views"]),
-> = (DefaultSchema["Tables"] & DefaultSchema["Views"])[Name] extends {
-  Row: infer R
+  DefaultSchemaTableNameOrOptions extends
+    | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+        DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
+    : never = never,
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
 }
-  ? R
-  : never
+  ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+      DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
+      Row: infer R
+    }
+    ? R
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema["Tables"] &
+        DefaultSchema["Views"])
+    ? (DefaultSchema["Tables"] &
+        DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
+        Row: infer R
+      }
+      ? R
+      : never
+    : never
 
-export type TablesInsert<Name extends keyof DefaultSchema["Tables"]> =
-  DefaultSchema["Tables"][Name] extends { Insert: infer I } ? I : never
+export type TablesInsert<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof DefaultSchema["Tables"]
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    : never = never,
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+      Insert: infer I
+    }
+    ? I
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+        Insert: infer I
+      }
+      ? I
+      : never
+    : never
 
-export type TablesUpdate<Name extends keyof DefaultSchema["Tables"]> =
-  DefaultSchema["Tables"][Name] extends { Update: infer U } ? U : never
+export type TablesUpdate<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof DefaultSchema["Tables"]
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    : never = never,
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+      Update: infer U
+    }
+    ? U
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+        Update: infer U
+      }
+      ? U
+      : never
+    : never
 
-export type Enums<Name extends keyof DefaultSchema["Enums"]> =
-  DefaultSchema["Enums"][Name]
+export type Enums<
+  DefaultSchemaEnumNameOrOptions extends
+    | keyof DefaultSchema["Enums"]
+    | { schema: keyof DatabaseWithoutInternals },
+  EnumName extends DefaultSchemaEnumNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
+    : never = never,
+> = DefaultSchemaEnumNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
+  : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
+    ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
+    : never
+
+export type CompositeTypes<
+  PublicCompositeTypeNameOrOptions extends
+    | keyof DefaultSchema["CompositeTypes"]
+    | { schema: keyof DatabaseWithoutInternals },
+  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
+    : never = never,
+> = PublicCompositeTypeNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
+  : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
+    ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
+    : never
+
+export const Constants = {
+  public: {
+    Enums: {
+      admin_role: [
+        "super_admin",
+        "admin",
+        "support_client",
+        "moderateur",
+        "comptabilite",
+      ],
+      availability_status: [
+        "disponible",
+        "occupe",
+        "conge",
+        "indisponible",
+        "maintenance",
+      ],
+      compte_statut: ["actif", "suspendu", "desactive", "en_attente"],
+      credit_txn_type: [
+        "achat",
+        "depense",
+        "bonus_gratuit",
+        "remboursement",
+        "promotion",
+        "correction_manuelle",
+        "annulation",
+      ],
+      demande_status: ["ouverte", "en_negociation", "cloturee", "annulee"],
+      entreprise_membre_role: ["proprietaire", "admin", "employe"],
+      entreprise_type: ["individuel", "entreprise"],
+      media_type: ["image", "video_link"],
+      message_type: [
+        "texte",
+        "image",
+        "pdf",
+        "devis",
+        "document",
+        "localisation",
+        "systeme",
+      ],
+      notification_channel: ["realtime", "email", "push"],
+      offre_status: ["envoyee", "vue", "acceptee", "refusee", "retiree"],
+      projet_status: ["actif", "termine", "annule"],
+      purchase_order_status: ["en_attente", "reussi", "echoue", "annule"],
+      subscription_status: ["active", "expiree", "annulee", "suspendue"],
+      user_role: ["client", "prestataire", "admin"],
+      verification_level: ["niveau_1", "niveau_2", "niveau_3"],
+      verification_request_status: ["en_attente", "approuvee", "rejetee"],
+    },
+  },
+} as const
