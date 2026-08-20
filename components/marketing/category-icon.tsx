@@ -1,3 +1,4 @@
+import { createElement } from "react";
 import {
   Building2,
   Camera,
@@ -36,4 +37,10 @@ const ICONES_PAR_SLUG: Record<string, LucideIcon> = {
 
 export function getIconePourCategorie(slug: string): LucideIcon {
   return ICONES_PAR_SLUG[slug] ?? PartyPopper;
+}
+
+/** Rend l'icône d'une catégorie — évite d'assigner un composant dynamique
+ * à une variable capitalisée directement dans le rendu. */
+export function CategoryIcon({ slug, className }: { slug: string; className?: string }) {
+  return createElement(getIconePourCategorie(slug), { className });
 }

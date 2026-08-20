@@ -673,6 +673,42 @@ export type Database = {
           },
         ]
       }
+      hero_slides: {
+        Row: {
+          active: boolean
+          alt: string
+          categorie: string
+          created_at: string
+          display_order: number
+          icon_slug: string
+          id: string
+          image_url: string | null
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          alt: string
+          categorie: string
+          created_at?: string
+          display_order?: number
+          icon_slug?: string
+          id?: string
+          image_url?: string | null
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          alt?: string
+          categorie?: string
+          created_at?: string
+          display_order?: number
+          icon_slug?: string
+          id?: string
+          image_url?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       legal_pages: {
         Row: {
           content: string

@@ -3,6 +3,7 @@ import { CheckCircle2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { HeroCarousel } from "@/components/marketing/hero-carousel";
+import { getActiveHeroSlidesPublic } from "@/features/hero-slides/queries/get-active-hero-slides";
 
 const REASSURANCES = [
   "Plusieurs propositions",
@@ -10,7 +11,9 @@ const REASSURANCES = [
   "Négociation libre",
 ];
 
-export function Hero() {
+export async function Hero() {
+  const slides = await getActiveHeroSlidesPublic();
+
   return (
     <section className="mx-auto max-w-6xl px-6 pt-10 pb-14 sm:pt-16 sm:pb-20">
       <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-14">
@@ -45,10 +48,12 @@ export function Hero() {
           </ul>
         </div>
 
-        {/* Carrousel photo */}
-        <div className="flex justify-center lg:justify-end">
-          <HeroCarousel />
-        </div>
+        {/* Carrousel photo — géré depuis /admin/hero-slides */}
+        {slides.length > 0 && (
+          <div className="flex justify-center lg:justify-end">
+            <HeroCarousel slides={slides} />
+          </div>
+        )}
       </div>
     </section>
   );

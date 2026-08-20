@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { BudgetSection } from "@/components/marketing/budget-section";
-import { getIconePourCategorie } from "@/components/marketing/category-icon";
+import { CategoryIcon } from "@/components/marketing/category-icon";
 import { DemoPreview } from "@/components/marketing/demo-preview";
 import { Hero } from "@/components/marketing/hero";
 import { MultiServiceDiagram } from "@/components/marketing/multi-service-diagram";
@@ -104,19 +104,16 @@ export default async function LandingPage() {
               Toutes les prestations pour votre événement
             </h2>
             <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
-              {categories.map((category) => {
-                const Icone = getIconePourCategorie(category.slug);
-                return (
-                  <Link
-                    key={category.id}
-                    href={`/recherche?categorie=${category.id}`}
-                    className="flex items-center gap-3 rounded-xl border border-border bg-background px-4 py-3 text-sm text-foreground transition-colors hover:border-primary hover:text-primary"
-                  >
-                    <Icone className="size-5 shrink-0 text-el-violet" />
-                    {category.label}
-                  </Link>
-                );
-              })}
+              {categories.map((category) => (
+                <Link
+                  key={category.id}
+                  href={`/recherche?categorie=${category.id}`}
+                  className="flex items-center gap-3 rounded-xl border border-border bg-background px-4 py-3 text-sm text-foreground transition-colors hover:border-primary hover:text-primary"
+                >
+                  <CategoryIcon slug={category.slug} className="size-5 shrink-0 text-el-violet" />
+                  {category.label}
+                </Link>
+              ))}
             </div>
           </div>
         </section>
