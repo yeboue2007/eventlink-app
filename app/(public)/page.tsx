@@ -4,6 +4,10 @@ import { CheckCircle2, MessageSquare, Search, ShieldCheck } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { BudgetSection } from "@/components/marketing/budget-section";
+import { getIconePourCategorie } from "@/components/marketing/category-icon";
+import { DemoPreview } from "@/components/marketing/demo-preview";
+import { Hero } from "@/components/marketing/hero";
 import { MultiServiceDiagram } from "@/components/marketing/multi-service-diagram";
 import { listRootCategories } from "@/features/categories/queries/list-categories";
 
@@ -22,7 +26,7 @@ const ETAPES = [
   },
   {
     icon: CheckCircle2,
-    titre: "Choisissez en confiance",
+    titre: "Comparez et choisissez",
     description:
       "Comparez, négociez par message, et acceptez l'offre qui vous convient.",
   },
@@ -39,31 +43,14 @@ export default async function LandingPage() {
 
   return (
     <div>
-      {/* Hero */}
-      <section className="mx-auto max-w-6xl px-6 pt-16 pb-20 text-center">
-        <p className="text-sm font-medium text-el-violet">EventLink</p>
-        <h1 className="mx-auto mt-2 max-w-3xl text-4xl font-semibold text-foreground sm:text-5xl">
-          <span className="text-el-gradient">Connexion. Confiance.</span>{" "}
-          Événements réussis.
-        </h1>
-        <p className="mx-auto mt-4 max-w-xl text-lg text-muted-foreground">
-          Décrivez votre événement, recevez plusieurs propositions de
-          prestataires vérifiés à Abidjan, et choisissez en toute confiance.
-        </p>
-        <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-          <Button asChild variant="primary" size="lg">
-            <Link href="/inscription/client">Publier une demande</Link>
-          </Button>
-          <Button asChild variant="outline" size="lg">
-            <Link href="/recherche">Explorer les prestataires</Link>
-          </Button>
-        </div>
-      </section>
+      <Hero />
+
+      <DemoPreview />
 
       {/* Signature : un prestataire, plusieurs services */}
-      <section className="border-y border-border bg-card py-16">
-        <div className="mx-auto grid max-w-6xl items-center gap-10 px-6 lg:grid-cols-2">
-          <div>
+      <section className="border-y border-border bg-card py-12 sm:py-16">
+        <div className="mx-auto grid max-w-6xl items-center gap-8 px-6 lg:grid-cols-2 lg:gap-10">
+          <div className="text-center lg:text-left">
             <Badge variant="secondary">Différenciateur EventLink</Badge>
             <h2 className="mt-3 text-2xl font-semibold text-foreground sm:text-3xl">
               Un prestataire, plusieurs services
@@ -75,7 +62,9 @@ export default async function LandingPage() {
               seul fil de discussion, souvent à prix réduit.
             </p>
           </div>
-          <MultiServiceDiagram />
+          <div className="mx-auto w-full max-w-xs sm:max-w-sm lg:max-w-none">
+            <MultiServiceDiagram />
+          </div>
         </div>
       </section>
 
@@ -105,6 +94,8 @@ export default async function LandingPage() {
         </div>
       </section>
 
+      <BudgetSection />
+
       {/* Catégories */}
       {categories.length > 0 && (
         <section id="categories" className="border-t border-border bg-card py-16">
@@ -112,16 +103,20 @@ export default async function LandingPage() {
             <h2 className="text-2xl font-semibold text-foreground sm:text-3xl">
               Toutes les prestations pour votre événement
             </h2>
-            <div className="mt-6 flex flex-wrap gap-2">
-              {categories.map((category) => (
-                <Link
-                  key={category.id}
-                  href={`/recherche?categorie=${category.id}`}
-                  className="rounded-full border border-border bg-background px-4 py-2 text-sm text-foreground transition-colors hover:border-primary hover:text-primary"
-                >
-                  {category.label}
-                </Link>
-              ))}
+            <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+              {categories.map((category) => {
+                const Icone = getIconePourCategorie(category.slug);
+                return (
+                  <Link
+                    key={category.id}
+                    href={`/recherche?categorie=${category.id}`}
+                    className="flex items-center gap-3 rounded-xl border border-border bg-background px-4 py-3 text-sm text-foreground transition-colors hover:border-primary hover:text-primary"
+                  >
+                    <Icone className="size-5 shrink-0 text-el-violet" />
+                    {category.label}
+                  </Link>
+                );
+              })}
             </div>
           </div>
         </section>
@@ -159,8 +154,8 @@ export default async function LandingPage() {
             Vous êtes prestataire événementiel ?
           </h2>
           <p className="mt-3 text-white/80">
-            Recevez des demandes ciblées sur toutes vos catégories de
-            services, sans commission sur vos contrats.
+            Recevez des demandes correspondant à vos services, sans
+            commission sur vos contrats.
           </p>
           <Button asChild variant="primary" size="lg" className="mt-6">
             <Link href="/inscription/prestataire">Inscrire mon entreprise</Link>
