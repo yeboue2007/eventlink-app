@@ -4,6 +4,13 @@ import { BarChart3, CreditCard, Settings, Tags, Users, Briefcase, UserCircle } f
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { getCurrentProfile } from "@/features/auth/queries/get-current-profile";
 import { peutAcceder, type ModuleAdmin } from "@/features/administration/permissions/permissions";
+import { AlertesTableauDeBord } from "@/features/administration/tableau-de-bord/components/alertes";
+import { KpiCard } from "@/features/administration/tableau-de-bord/components/kpi-card";
+import { getIndicateursTableauDeBord } from "@/features/administration/tableau-de-bord/queries/get-indicateurs";
+
+function formatFcfa(value: number) {
+  return new Intl.NumberFormat("fr-FR").format(value) + " FCFA";
+}
 
 const RACCOURCIS: { href: string; icon: typeof BarChart3; titre: string; description: string; module: ModuleAdmin }[] = [
   {
@@ -72,9 +79,44 @@ export default async function EspaceAdminPage() {
     ? RACCOURCIS.filter((r) => peutAcceder(adminRole, r.module))
     : [];
 
+  const peutVoirIndicateurs = adminRole
+    ? peutAcceder(adminRole, "tableau_de_bord", "lecture")
+    : false;
+
+  const indicateurs = peutVoirIndicateurs ? await getIndicateursTableauDeBord() : null;
+
   return (
     <div className="space-y-6">
       <h1 className="text-2xl font-semibold text-foreground">Back-office EventLink</h1>
+
+      {indicateurs && (
+        <>
+          <AlertesTableauDeBord indicateurs={indicateurs} />
+
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <KpiCard label="Demandes (total)" value={indicateurs.totalDemandes} />
+            <KpiCard label="Offres (total)" value={indicateurs.totalOffres} />
+            <KpiCard label="Entreprises inscrites" value={indicateurs.totalEntreprises} />
+            <KpiCard label="Clients inscrits" value={indicateurs.totalClients} />
+          </div>
+
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <KpiCard
+              label="Revenus (7 derniers jours)"
+              value={formatFcfa(indicateurs.revenu7j)}
+            />
+            <KpiCard
+              label="Revenus (30 derniers jours)"
+              value={formatFcfa(indicateurs.revenu30j)}
+            />
+            <KpiCard
+              label="Nouvelles demandes ouvertes"
+              value={indicateurs.demandesOuvertes7j}
+              sousTexte="7 derniers jours"
+            />
+          </div>
+        </>
+      )}
 
       <div className="grid gap-4 sm:grid-cols-2">
         {raccourcisVisibles.map((item) => {
