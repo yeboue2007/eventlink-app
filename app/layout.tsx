@@ -1,7 +1,8 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Poppins } from "next/font/google";
 import "./globals.css";
 
+import { ServiceWorkerRegister } from "@/components/pwa/service-worker-register";
 import { Toaster } from "@/components/ui/sonner";
 import { getBrandColors } from "@/features/administration/configuration/queries/list-configuration";
 
@@ -19,6 +20,25 @@ export const metadata: Metadata = {
   },
   description:
     "EventLink met en relation les organisateurs d'événements et les prestataires événementiels à Abidjan : publiez une demande, recevez plusieurs offres, choisissez en toute confiance.",
+  manifest: "/manifest.webmanifest",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "EventLink",
+  },
+  icons: {
+    icon: [
+      { url: "/icons/icon-192.png", sizes: "192x192", type: "image/png" },
+      { url: "/icons/icon-512.png", sizes: "512x512", type: "image/png" },
+    ],
+    apple: [{ url: "/icons/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
+  },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  themeColor: "#2C1E47",
 };
 
 export default async function RootLayout({
@@ -44,6 +64,7 @@ export default async function RootLayout({
       <body className="min-h-full flex flex-col">
         {children}
         <Toaster />
+        <ServiceWorkerRegister />
       </body>
     </html>
   );
