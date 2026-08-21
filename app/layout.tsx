@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Poppins } from "next/font/google";
 import "./globals.css";
 
+import { InstallPromptBanner } from "@/components/pwa/install-prompt-banner";
 import { ServiceWorkerRegister } from "@/components/pwa/service-worker-register";
 import { Toaster } from "@/components/ui/sonner";
 import { getBrandColors } from "@/features/administration/configuration/queries/list-configuration";
@@ -65,6 +66,7 @@ export default async function RootLayout({
         {children}
         <Toaster />
         <ServiceWorkerRegister />
+        <InstallPromptBanner />
       </body>
     </html>
   );
