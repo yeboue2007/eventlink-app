@@ -34,6 +34,7 @@ export default async function PrestataireLayout({
         role="prestataire"
         profileId={current.user.id}
         initialNotifications={notifications}
+        navItems={NAV_ITEMS}
       />
       <div className="mx-auto flex w-full max-w-6xl flex-1">
         <Sidebar items={NAV_ITEMS} />

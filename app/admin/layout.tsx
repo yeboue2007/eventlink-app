@@ -103,6 +103,7 @@ export default async function AdminLayout({
         role="admin"
         profileId={current.user.id}
         initialNotifications={notifications}
+        navItems={navItems}
       />
       <div className="mx-auto flex w-full max-w-6xl flex-1">
         <Sidebar items={navItems} />
